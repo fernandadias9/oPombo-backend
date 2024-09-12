@@ -1,10 +1,10 @@
 package com.opombo.service;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.opombo.model.entity.Denuncia;
 import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
 import com.opombo.model.filtro.MensagemFiltro;
-import com.opombo.model.filtro.UsuarioFiltro;
+import com.opombo.model.repository.DenunciaRepository;
 import com.opombo.model.repository.MensagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -24,9 +24,7 @@ public class MensagemService {
             return mensagemRepository.save(mensagem);
         }
 
-        public Mensagem atualizar(Mensagem mensagem) {
-            return mensagemRepository.save(mensagem);
-        }
+        // public Mensagem atualizar(Mensagem mensagem) { return mensagemRepository.save(mensagem); }
 
         public Mensagem buscar(String id) {
             return mensagemRepository.findById(id).get();

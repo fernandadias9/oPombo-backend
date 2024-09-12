@@ -1,0 +1,57 @@
+package com.opombo.model.filtro;
+
+import com.opombo.model.entity.Denuncia;
+import com.opombo.model.entity.Denuncia;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import lombok.Data;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+public class DenunciaFiltro extends BaseFiltro implements Specification<Denuncia> {
+
+    private String texto;
+    private String idPublicador;
+    private LocalDateTime dataInicial;
+    private LocalDateTime dataFinal;
+    private String motivoDaDenuncia;
+    private boolean foiAnalisada;
+
+    public boolean temFiltro() {
+        return  (filtroValido(this.texto))
+                || (filtroValido(this.idPublicador))
+                || (dataInicial != null)
+                || (dataFinal != null)
+                || (filtroValido(motivoDaDenuncia))
+                || foiAnalisada;
+    }
+
+    @Override
+    public Predicate toPredicate(Root<Denuncia> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if(this.getTexto() != null && this.getTexto().trim().length() > 0) {
+            predicates.add(cb.like(root.get("mensagem").get("texto"), "%" + this.getTexto() + "%"));
+        }
+
+        if(this.getIdPublicador() != null && this.getIdPublicador().trim().length() > 0) {
+            predicates.add(cb.like(root.get("publicador").get("id"), "%" + this.getIdPublicador() + "%"));
+        }
+
+        aplicarFiltroPeriodo(root, cb, predicates, this.getDataInicial(), this.getDataFinal(), "criadoEm");
+
+        if(this.getMotivoDaDenuncia() != null && this.getMotivoDaDenuncia().trim().length() > 0) {
+            predicates.add(cb.like(root.get("motivo"), "%" + this.getMotivoDaDenuncia() + "%"));
+        }
+
+        predicates.add(cb.equal(root.get("foiAnalisada"), this.isFoiAnalisada()));
+
+        return cb.and(predicates.toArray(new Predicate[0]));
+    }
+}

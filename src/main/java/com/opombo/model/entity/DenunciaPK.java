@@ -11,8 +11,8 @@ import java.io.Serializable;
 public class DenunciaPK implements Serializable {
 
     @Column(name = "id_mensagem")
-    Integer idMensagem;
+    String idMensagem;
 
     @Column(name = "id_usuario")
-    Integer idUsuario;
+    String idUsuario;
 }

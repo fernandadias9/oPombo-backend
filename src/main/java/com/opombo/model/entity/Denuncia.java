@@ -1,7 +1,9 @@
 package com.opombo.model.entity;
 
+import com.opombo.model.enums.MotivoDaDenuncia;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 
@@ -22,11 +24,10 @@ public class Denuncia {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
+    @CreationTimestamp
     private LocalDate data;
 
-    // private Motivo motivo;
+    private MotivoDaDenuncia motivo;
 
     private boolean foiAnalisada;
-
-
 }
