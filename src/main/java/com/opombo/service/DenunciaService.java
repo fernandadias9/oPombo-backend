@@ -6,9 +6,9 @@ import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
 import com.opombo.model.enums.MotivoDaDenuncia;
 import com.opombo.model.filtro.DenunciaFiltro;
-import com.opombo.model.filtro.MensagemFiltro;
 import com.opombo.model.repository.DenunciaRepository;
-import jakarta.validation.Valid;
+import com.opombo.model.repository.MensagemRepository;
+import com.opombo.model.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,11 +21,19 @@ public class DenunciaService {
     @Autowired
     private DenunciaRepository denunciaRepository;
 
-    public Denuncia denunciarMensagem(Mensagem mensagem, Usuario usuario, MotivoDaDenuncia motivo) {
+    @Autowired
+    private MensagemRepository mensagemRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    public Denuncia denunciarMensagem(String idMensagem, String idUsuario, MotivoDaDenuncia motivo) {
+        Mensagem mensagem = this.mensagemRepository.findById(idMensagem).get();
+        Usuario usuario = this.usuarioRepository.findById(idUsuario).get();
 
         DenunciaPK denunciaPK = new DenunciaPK();
-        denunciaPK.setIdMensagem(mensagem.getId());
-        denunciaPK.setIdUsuario(usuario.getId());
+        denunciaPK.setIdMensagem(idMensagem);
+        denunciaPK.setIdUsuario(idUsuario);
 
         Denuncia denuncia = new Denuncia();
         denuncia.setId(denunciaPK);

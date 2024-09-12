@@ -28,13 +28,7 @@ public class DenunciaController {
             @RequestParam("motivo") MotivoDaDenuncia motivo
     ) {
 
-        Mensagem mensagem = new Mensagem();
-        mensagem.setId(idMensagem);
-
-        Usuario usuario = new Usuario();
-        usuario.setId(idUsuario);
-
-        Denuncia denuncia = denunciaService.denunciarMensagem(mensagem, usuario, motivo);
+        Denuncia denuncia = denunciaService.denunciarMensagem(idMensagem, idUsuario, motivo);
 
         return ResponseEntity.ok(denuncia);
     }

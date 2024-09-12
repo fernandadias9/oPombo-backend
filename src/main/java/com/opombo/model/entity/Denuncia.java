@@ -27,6 +27,7 @@ public class Denuncia {
     @CreationTimestamp
     private LocalDate data;
 
+    @Enumerated(EnumType.STRING)
     private MotivoDaDenuncia motivo;
 
     private boolean foiAnalisada;

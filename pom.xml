@@ -66,6 +66,12 @@
 			<version>8.0.33</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.6.0</version>
+		</dependency>
+
 		<!--
       Swagger com OpenAPI
       acessar via :  http://localhost:8080/opombo/swagger-ui.html
