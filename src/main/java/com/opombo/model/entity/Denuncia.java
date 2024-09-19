@@ -2,10 +2,11 @@ package com.opombo.model.entity;
 
 import com.opombo.model.enums.MotivoDaDenuncia;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -25,10 +26,11 @@ public class Denuncia {
     private Usuario usuario;
 
     @CreationTimestamp
-    private LocalDate data;
+    private LocalDateTime data;
 
+    @NotNull(message = "Motivo é obrigatório")
     @Enumerated(EnumType.STRING)
     private MotivoDaDenuncia motivo;
 
-    private boolean foiAnalisada;
+    private boolean foiAnalisada = false;
 }

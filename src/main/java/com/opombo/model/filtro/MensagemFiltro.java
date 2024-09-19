@@ -36,8 +36,6 @@ public class MensagemFiltro extends BaseFiltro implements Specification<Mensagem
         }
 
         if(this.getIdPublicador() != null && this.getIdPublicador().trim().length() > 0) {
-            //Predicado --> operador (comparação), atributo/coluna, valor
-            //Forma 1: usando somente get
             predicates.add(cb.like(root.get("publicador").get("id"), "%" + this.getIdPublicador() + "%"));
         }
 

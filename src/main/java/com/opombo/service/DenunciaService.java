@@ -1,5 +1,6 @@
 package com.opombo.service;
 
+import com.opombo.model.dto.DenunciaDTO;
 import com.opombo.model.entity.Denuncia;
 import com.opombo.model.entity.DenunciaPK;
 import com.opombo.model.entity.Mensagem;
@@ -27,19 +28,19 @@ public class DenunciaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Denuncia denunciarMensagem(String idMensagem, String idUsuario, MotivoDaDenuncia motivo) {
-        Mensagem mensagem = this.mensagemRepository.findById(idMensagem).get();
-        Usuario usuario = this.usuarioRepository.findById(idUsuario).get();
+    public Denuncia denunciarMensagem(DenunciaDTO denunciaDTO) {
+        Mensagem mensagem = this.mensagemRepository.findById(denunciaDTO.getIdMensagem()).get();
+        Usuario usuario = this.usuarioRepository.findById(denunciaDTO.getIdUsuario()).get();
 
         DenunciaPK denunciaPK = new DenunciaPK();
-        denunciaPK.setIdMensagem(idMensagem);
-        denunciaPK.setIdUsuario(idUsuario);
+        denunciaPK.setIdMensagem(denunciaDTO.getIdMensagem());
+        denunciaPK.setIdUsuario(denunciaDTO.getIdUsuario());
 
         Denuncia denuncia = new Denuncia();
         denuncia.setId(denunciaPK);
         denuncia.setMensagem(mensagem);
         denuncia.setUsuario(usuario);
-        denuncia.setMotivo(motivo);
+        denuncia.setMotivo(denunciaDTO.getMotivo());
         denuncia.setFoiAnalisada(false);
         return denunciaRepository.save(denuncia);
     }

@@ -17,7 +17,7 @@ import java.util.List;
 public class DenunciaFiltro extends BaseFiltro implements Specification<Denuncia> {
 
     private String texto;
-    private String idPublicador;
+    private String idDenunciante;
     private LocalDateTime dataInicial;
     private LocalDateTime dataFinal;
     private String motivoDaDenuncia;
@@ -25,7 +25,7 @@ public class DenunciaFiltro extends BaseFiltro implements Specification<Denuncia
 
     public boolean temFiltro() {
         return  (filtroValido(this.texto))
-                || (filtroValido(this.idPublicador))
+                || (filtroValido(this.idDenunciante))
                 || (dataInicial != null)
                 || (dataFinal != null)
                 || (filtroValido(motivoDaDenuncia))
@@ -37,14 +37,14 @@ public class DenunciaFiltro extends BaseFiltro implements Specification<Denuncia
         List<Predicate> predicates = new ArrayList<>();
 
         if(this.getTexto() != null && this.getTexto().trim().length() > 0) {
-            predicates.add(cb.like(root.get("mensagem").get("texto"), "%" + this.getTexto() + "%"));
+            predicates.add(cb.like(root.join("mensagem").get("texto"), "%" + this.getTexto() + "%"));
         }
 
-        if(this.getIdPublicador() != null && this.getIdPublicador().trim().length() > 0) {
-            predicates.add(cb.like(root.get("publicador").get("id"), "%" + this.getIdPublicador() + "%"));
+        if(this.getIdDenunciante() != null && this.getIdDenunciante().trim().length() > 0) {
+            predicates.add(cb.like(root.get("usuario").get("id"), "%" + this.getIdDenunciante() + "%"));
         }
 
-        aplicarFiltroPeriodo(root, cb, predicates, this.getDataInicial(), this.getDataFinal(), "criadoEm");
+        aplicarFiltroPeriodo(root, cb, predicates, this.getDataInicial(), this.getDataFinal(), "data");
 
         if(this.getMotivoDaDenuncia() != null && this.getMotivoDaDenuncia().trim().length() > 0) {
             predicates.add(cb.like(root.get("motivo"), "%" + this.getMotivoDaDenuncia() + "%"));

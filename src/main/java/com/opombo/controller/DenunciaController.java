@@ -1,11 +1,8 @@
 package com.opombo.controller;
 
+import com.opombo.model.dto.DenunciaDTO;
 import com.opombo.model.entity.Denuncia;
-import com.opombo.model.entity.Mensagem;
-import com.opombo.model.entity.Usuario;
-import com.opombo.model.enums.MotivoDaDenuncia;
 import com.opombo.model.filtro.DenunciaFiltro;
-import com.opombo.model.filtro.MensagemFiltro;
 import com.opombo.service.DenunciaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +19,8 @@ public class DenunciaController {
     private DenunciaService denunciaService;
 
     @PostMapping
-    public ResponseEntity<Denuncia> denunciarMensagem(
-            @RequestParam("idMensagem") String idMensagem,
-            @RequestParam("idUsuario") String idUsuario,
-            @RequestParam("motivo") MotivoDaDenuncia motivo
-    ) {
-
-        Denuncia denuncia = denunciaService.denunciarMensagem(idMensagem, idUsuario, motivo);
-
+    public ResponseEntity<Denuncia> denunciarMensagem(@Valid @RequestBody DenunciaDTO denunciaDTO) {
+        Denuncia denuncia = denunciaService.denunciarMensagem(denunciaDTO);
         return ResponseEntity.ok(denuncia);
     }
 
