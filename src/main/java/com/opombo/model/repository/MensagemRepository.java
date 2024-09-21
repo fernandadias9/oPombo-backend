@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MensagemRepository extends JpaRepository<Mensagem, String>, JpaSpecificationExecutor<Mensagem> {
 
-
 }

@@ -90,7 +90,9 @@ public class MensagemService {
 
         return mensagens.stream().map(mensagem -> {
             int quantidadeDenuncias = denunciaService.buscarDenunciasPorMensagem(mensagem.getId()).size();
-
+            if(mensagem.isBloqueado()) {
+                mensagem.setTexto("Bloqueada pelo administrador.");
+            }
             return new ListaMensagensDTO(
                     mensagem.getId(),
                     mensagem.getTexto(),
