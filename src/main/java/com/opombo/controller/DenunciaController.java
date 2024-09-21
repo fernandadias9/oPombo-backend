@@ -30,6 +30,9 @@ public class DenunciaController {
     }
 
     @GetMapping
+    public List<DenunciaDTO> listarDTO() { return denunciaService.listarDTO(); }
+
+    @GetMapping("/todas")
     public List<Denuncia> listar() {
         return denunciaService.listar();
     }
@@ -37,5 +40,11 @@ public class DenunciaController {
     @PostMapping("/filtro")
     public List<Denuncia> pesquisarComFiltro(@RequestBody DenunciaFiltro filtro) {
         return denunciaService.listarComFiltro(filtro);
+    }
+
+    @GetMapping("/mensagem/{idMensagem}")
+    public ResponseEntity<List<Denuncia>> buscarDenunciasPorMensagem(@PathVariable String idMensagem) {
+        List<Denuncia> denuncias = denunciaService.buscarDenunciasPorMensagem(idMensagem);
+        return ResponseEntity.ok(denuncias);
     }
 }

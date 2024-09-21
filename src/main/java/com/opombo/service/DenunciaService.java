@@ -49,6 +49,10 @@ public class DenunciaService {
         return denunciaRepository.findAll();
     }
 
+    public List<DenunciaDTO> listarDTO() {
+        return denunciaRepository.findAllDenunciasDTO();
+    }
+
     public List<Denuncia> listarComFiltro(DenunciaFiltro filtros) {
         if(filtros.temPaginacao()) {
             int pageNumber = filtros.getPagina();
@@ -62,5 +66,9 @@ public class DenunciaService {
 
     public Denuncia buscar(String id) {
         return denunciaRepository.findById(id).get();
+    }
+
+    public List<Denuncia> buscarDenunciasPorMensagem(String idMensagem) {
+        return denunciaRepository.findByMensagemId(idMensagem);
     }
 }

@@ -1,5 +1,6 @@
 package com.opombo.service;
 
+import com.opombo.model.dto.ListaMensagensDTO;
 import com.opombo.model.entity.Denuncia;
 import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
@@ -13,14 +14,18 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class MensagemService {
 
-        @Autowired
-        private MensagemRepository mensagemRepository;
+    @Autowired
+    private MensagemRepository mensagemRepository;
 
-        public Mensagem salvar(Mensagem mensagem) {
+    @Autowired
+    private DenunciaService denunciaService;
+
+    public Mensagem salvar(Mensagem mensagem) {
             return mensagemRepository.save(mensagem);
         }
 
@@ -79,4 +84,21 @@ public class MensagemService {
             }
             return new HashSet<>();
         }
+
+    public List<ListaMensagensDTO> listarMensagens() {
+        List<Mensagem> mensagens = mensagemRepository.findAll();
+
+        return mensagens.stream().map(mensagem -> {
+            int quantidadeDenuncias = denunciaService.buscarDenunciasPorMensagem(mensagem.getId()).size();
+
+            return new ListaMensagensDTO(
+                    mensagem.getId(),
+                    mensagem.getTexto(),
+                    mensagem.getQtdeLikes(),
+                    mensagem.getPublicador().getId(),
+                    mensagem.getPublicador().getNome(),
+                    quantidadeDenuncias
+            );
+        }).collect(Collectors.toList());
+    }
 }

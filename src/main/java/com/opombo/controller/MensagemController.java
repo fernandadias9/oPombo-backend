@@ -1,5 +1,6 @@
 package com.opombo.controller;
 
+import com.opombo.model.dto.ListaMensagensDTO;
 import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
 import com.opombo.model.filtro.MensagemFiltro;
@@ -36,6 +37,12 @@ public class MensagemController {
     }
 
     @GetMapping
+    public ResponseEntity<List<ListaMensagensDTO>> listarMensagens() {
+        List<ListaMensagensDTO> mensagens = mensagemService.listarMensagens();
+        return ResponseEntity.ok(mensagens);
+    }
+
+    @GetMapping("/todas")
     public List<Mensagem> listar() {
         return mensagemService.listar();
     }
