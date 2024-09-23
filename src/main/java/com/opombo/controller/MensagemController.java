@@ -52,12 +52,6 @@ public class MensagemController {
         return mensagemService.listarComFiltro(filtro);
     }
 
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable String id) {
-        mensagemService.excluir(id);
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping(path = "/curtir/{idUsuario}/{idMensagem}")
     public ResponseEntity<Void> curtir(@PathVariable String idUsuario, @PathVariable String idMensagem) {
         Usuario usuario = this.usuarioService.buscar(idUsuario);

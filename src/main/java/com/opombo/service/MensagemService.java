@@ -29,61 +29,56 @@ public class MensagemService {
             return mensagemRepository.save(mensagem);
         }
 
-        // public Mensagem atualizar(Mensagem mensagem) { return mensagemRepository.save(mensagem); }
+    // public Mensagem atualizar(Mensagem mensagem) { return mensagemRepository.save(mensagem); }
 
-        public Mensagem buscar(String id) {
-            return mensagemRepository.findById(id).get();
+      public Mensagem buscar(String id) {
+        return mensagemRepository.findById(id).get();
+    }
+
+    public List<Mensagem> listar() {
+        return mensagemRepository.findAll();
+    }
+
+    public List<Mensagem> listarComFiltro(MensagemFiltro filtros) {
+        if(filtros.temPaginacao()) {
+            int pageNumber = filtros.getPagina();
+            int pageSize = filtros.getLimite();
+            PageRequest pagina = PageRequest.of(pageNumber - 1, pageSize);
+            return mensagemRepository.findAll(filtros, pagina).toList();
         }
+        return mensagemRepository.findAll(filtros);
+    }
 
-        public List<Mensagem> listar() {
-            return mensagemRepository.findAll();
-        }
-
-        public List<Mensagem> listarComFiltro(MensagemFiltro filtros) {
-            if(filtros.temPaginacao()) {
-                int pageNumber = filtros.getPagina();
-                int pageSize = filtros.getLimite();
-
-                PageRequest pagina = PageRequest.of(pageNumber - 1, pageSize);
-                return mensagemRepository.findAll(filtros, pagina).toList();
-            }
-            return mensagemRepository.findAll(filtros);
-        }
-
-        public void excluir(String id) {
-            mensagemRepository.deleteById(id);
-        }
-
-        public void curtir(String idMensagem, Usuario usuario) {
-            Mensagem mensagem = buscar(idMensagem);
-            if (mensagem != null) {
-                Set<Usuario> usuariosQueCurtiram = mensagem.getUsuariosQueCurtiram();
-                if (usuariosQueCurtiram.contains(usuario)) {
-                    usuariosQueCurtiram.remove(usuario);
-                } else {
-                    usuariosQueCurtiram.add(usuario);
-                }
-                mensagem.setQtdeLikes(usuariosQueCurtiram.size());
-                salvar(mensagem);
-            }
-        }
-
-        public void bloquearOuDesbloquearMensagem(Mensagem mensagem ) {
-            if(mensagem.isBloqueado() == false) {
-                mensagem.setBloqueado(true);
+    public void curtir(String idMensagem, Usuario usuario) {
+        Mensagem mensagem = buscar(idMensagem);
+        if (mensagem != null) {
+            Set<Usuario> usuariosQueCurtiram = mensagem.getUsuariosQueCurtiram();
+            if (usuariosQueCurtiram.contains(usuario)) {
+                usuariosQueCurtiram.remove(usuario);
             } else {
-                mensagem.setBloqueado(false);
+                usuariosQueCurtiram.add(usuario);
             }
+            mensagem.setQtdeLikes(usuariosQueCurtiram.size());
             salvar(mensagem);
         }
+    }
 
-        public Set<Usuario> obterUsuariosQueCurtiram(String idMensagem) {
-            Mensagem mensagem = buscar(idMensagem);
-            if (mensagem != null) {
-                return mensagem.getUsuariosQueCurtiram();
-            }
-            return new HashSet<>();
+    public void bloquearOuDesbloquearMensagem(Mensagem mensagem ) {
+        if(mensagem.isBloqueado() == false) {
+            mensagem.setBloqueado(true);
+        } else {
+            mensagem.setBloqueado(false);
         }
+        salvar(mensagem);
+    }
+
+    public Set<Usuario> obterUsuariosQueCurtiram(String idMensagem) {
+        Mensagem mensagem = buscar(idMensagem);
+        if (mensagem != null) {
+            return mensagem.getUsuariosQueCurtiram();
+        }
+        return new HashSet<>();
+    }
 
     public List<ListaMensagensDTO> listarMensagens() {
         List<Mensagem> mensagens = mensagemRepository.findAll();
