@@ -24,6 +24,10 @@ public class UsuarioService {
         if(usuarioRepository.findByCpf(usuario.getCpf()) != null) {
             throw new OPomboException("CPF já cadastrado na base de dados.", HttpStatus.BAD_REQUEST);
         }
+
+        if(usuarioRepository.findByEmail(usuario.getEmail()) != null) {
+            throw new OPomboException("Email já cadastrado na base de dados.", HttpStatus.BAD_REQUEST);
+        }
         return usuarioRepository.save(usuario);
     }
 

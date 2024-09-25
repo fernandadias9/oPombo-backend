@@ -1,11 +1,9 @@
 package com.opombo.service;
 
 import com.opombo.model.dto.ListaMensagensDTO;
-import com.opombo.model.entity.Denuncia;
 import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
 import com.opombo.model.filtro.MensagemFiltro;
-import com.opombo.model.repository.DenunciaRepository;
 import com.opombo.model.repository.MensagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
