@@ -71,5 +71,4 @@ public class MensagemController {
         mensagemService.bloquearOuDesbloquearMensagem(mensagem);
         return ResponseEntity.ok().build();
     }
-
 }

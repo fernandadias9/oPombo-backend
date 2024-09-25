@@ -88,6 +88,17 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
+		<!--
+				Descomente para usar uma base H2 (em memória) para os testes
+				Quando descomentar, também troque as anotações @SpringBootTest por @DataJpaTest
+				em todos as classes *RepositoryTest
+			-->
+		<!--		<dependency>-->
+		<!--		    <groupId>com.h2database</groupId>-->
+		<!--		    <artifactId>h2</artifactId>-->
+		<!--		    <scope>test</scope>-->
+		<!--		</dependency>-->
 	</dependencies>
 
 	<build>
