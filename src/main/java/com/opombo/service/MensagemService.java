@@ -24,12 +24,10 @@ public class MensagemService {
     private DenunciaService denunciaService;
 
     public Mensagem salvar(Mensagem mensagem) {
-            return mensagemRepository.save(mensagem);
-        }
+        return mensagemRepository.save(mensagem);
+    }
 
-    // public Mensagem atualizar(Mensagem mensagem) { return mensagemRepository.save(mensagem); }
-
-      public Mensagem buscar(String id) {
+    public Mensagem buscar(String id) {
         return mensagemRepository.findById(id).get();
     }
 
@@ -38,7 +36,7 @@ public class MensagemService {
     }
 
     public List<Mensagem> listarComFiltro(MensagemFiltro filtros) {
-        if(filtros.temPaginacao()) {
+        if (filtros.temPaginacao()) {
             int pageNumber = filtros.getPagina();
             int pageSize = filtros.getLimite();
             PageRequest pagina = PageRequest.of(pageNumber - 1, pageSize);
@@ -61,8 +59,8 @@ public class MensagemService {
         }
     }
 
-    public void bloquearOuDesbloquearMensagem(Mensagem mensagem ) {
-        if(mensagem.isBloqueado() == false) {
+    public void bloquearOuDesbloquearMensagem(Mensagem mensagem) {
+        if (mensagem.isBloqueado() == false) {
             mensagem.setBloqueado(true);
         } else {
             mensagem.setBloqueado(false);
@@ -83,7 +81,7 @@ public class MensagemService {
 
         return mensagens.stream().map(mensagem -> {
             int quantidadeDenuncias = denunciaService.buscarDenunciasPorMensagem(mensagem.getId()).size();
-            if(mensagem.isBloqueado()) {
+            if (mensagem.isBloqueado()) {
                 mensagem.setTexto("Bloqueada pelo administrador.");
             }
             return new ListaMensagensDTO(

@@ -1,37 +1,67 @@
 package com.opombo.service;
 
+import com.opombo.exception.OPomboException;
 import com.opombo.model.entity.Usuario;
-import com.opombo.model.enums.TipoDeUsuario;
 import com.opombo.model.repository.UsuarioRepository;
-import jakarta.validation.ConstraintViolationException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.springframework.http.HttpStatus;
 
 @SpringBootTest
 
 @ActiveProfiles("test")
 public class UsuarioServiceTest {
 
-    @Autowired
+    @Mock
     private UsuarioRepository usuarioRepository;
 
+    @InjectMocks
+    private UsuarioService usuarioService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
-    void deveFalharAoSalvarUsuarioComNomeEmBranco() {
-        // Dado
+    public void testeCpfDuplicado() {
         Usuario usuario = new Usuario();
         usuario.setCpf("12345678900");
-        usuario.setEmail("teste@teste.com");
-        usuario.setNome("");
-        usuario.setTipo(TipoDeUsuario.USUARIO);
+        when(usuarioRepository.findByCpf("12345678900")).thenReturn(new Usuario());
 
-        // Quando & Então
-        // Tenta salvar o usuário no banco e espera-se que ocorra um erro de validação
-        assertThrows(ConstraintViolationException.class, () -> {
-            usuarioRepository.saveAndFlush(usuario);
+        OPomboException exception = assertThrows(OPomboException.class, () -> {
+            usuarioService.salvar(usuario);
         });
+
+        assertEquals("CPF já cadastrado na base de dados.", exception.getMessage());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+
+        verify(usuarioRepository, times(1)).findByCpf("12345678900");
+        verify(usuarioRepository, times(0)).save(usuario);
+    }
+
+    @Test
+    public void testeEmailDuplicado() {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("teste@teste.com");
+        when(usuarioRepository.findByEmail("teste@teste.com")).thenReturn(new Usuario());
+
+        OPomboException exception = assertThrows(OPomboException.class, () -> {
+            usuarioService.salvar(usuario);
+        });
+
+        assertEquals("Email já cadastrado na base de dados.", exception.getMessage());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+
+        verify(usuarioRepository, times(1)).findByEmail("teste@teste.com");
+        verify(usuarioRepository, times(0)).save(usuario);
     }
 }
