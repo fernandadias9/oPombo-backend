@@ -60,7 +60,7 @@ public class MensagemService {
     }
 
     public void bloquearOuDesbloquearMensagem(Mensagem mensagem) {
-        if (mensagem.isBloqueado() == false) {
+        if (mensagem.getBloqueado() == false) {
             mensagem.setBloqueado(true);
         } else {
             mensagem.setBloqueado(false);
@@ -81,7 +81,7 @@ public class MensagemService {
 
         return mensagens.stream().map(mensagem -> {
             int quantidadeDenuncias = denunciaService.buscarDenunciasPorMensagem(mensagem.getId()).size();
-            if (mensagem.isBloqueado()) {
+            if (mensagem.getBloqueado()) {
                 mensagem.setTexto("Bloqueada pelo administrador.");
             }
             return new ListaMensagensDTO(

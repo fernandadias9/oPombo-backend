@@ -41,7 +41,7 @@ public class Mensagem {
     )
     private Set<Usuario> usuariosQueCurtiram = new HashSet<>();
 
-    private boolean bloqueado = false;
+    private Boolean bloqueado = false;
 
     @Override
     public boolean equals(Object o) {
