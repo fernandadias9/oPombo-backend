@@ -9,13 +9,17 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
-public class Usuario {
+public class Usuario implements UserDetails {
+
+    private static final long serialVersionUID = 3667682428012659277L;
 
     @Id
     @UuidGenerator
@@ -28,6 +32,9 @@ public class Usuario {
     @NotBlank(message = "Email é obrigatório")
     @Email(message = "Digite um email válido")
     private String email;
+
+    @NotBlank(message = "Senha é obrigatória.")
+    private String senha;
 
     @NotBlank(message = "CPF é obrigatório")
     @CPF
@@ -44,4 +51,23 @@ public class Usuario {
             inverseJoinColumns = @JoinColumn(name = "id_mensagem")
     )
     private Set<Mensagem> mensagensCurtidas = new HashSet<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> list = new ArrayList<>();
+
+        list.add(new SimpleGrantedAuthority(tipo.toString()));
+
+        return list;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
 }

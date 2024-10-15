@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,6 +31,7 @@ public class UsuarioRepositoryTest {
         usuario.setNome("Usuario Teste");
         usuario.setCpf("40331786940");
         usuario.setEmail("usuario@email.com");
+        usuario.setSenha("senha123");  // Definindo a senha
         usuario.setTipo(TipoDeUsuario.ADMINISTRADOR);
 
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
@@ -37,6 +39,7 @@ public class UsuarioRepositoryTest {
         assertThat(usuarioSalvo.getNome()).isEqualTo("Usuario Teste");
         assertThat(usuarioSalvo.getCpf()).isEqualTo("40331786940");
         assertThat(usuarioSalvo.getEmail()).isEqualTo("usuario@email.com");
+        assertThat(usuarioSalvo.getSenha()).isEqualTo("senha123");
         assertThat(usuarioSalvo.getTipo()).isEqualTo(TipoDeUsuario.ADMINISTRADOR);
     }
 

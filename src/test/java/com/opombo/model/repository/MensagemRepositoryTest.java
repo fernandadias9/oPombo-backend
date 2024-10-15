@@ -38,6 +38,7 @@ class MensagemRepositoryTest {
         publicador.setNome("João Silva");
         publicador.setEmail("joao.silva@example.com");
         publicador.setCpf("00732529050");
+        publicador.setSenha("senha123");
         publicador.setTipo(TipoDeUsuario.USUARIO);
         usuarioRepository.save(publicador);
 
@@ -46,6 +47,7 @@ class MensagemRepositoryTest {
         mensagem.setPublicador(publicador);
         mensagemRepository.save(mensagem);
     }
+
 
     @Test
     @DisplayName("Deve salvar uma nova mensagem com sucesso")

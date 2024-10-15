@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.springframework.http.HttpStatus;
 
+import java.util.Optional;
+
 @SpringBootTest
 
 @ActiveProfiles("test")
@@ -52,7 +54,7 @@ public class UsuarioServiceTest {
     public void testeEmailDuplicado() {
         Usuario usuario = new Usuario();
         usuario.setEmail("teste@teste.com");
-        when(usuarioRepository.findByEmail("teste@teste.com")).thenReturn(new Usuario());
+        when(usuarioRepository.findByEmail("teste@teste.com")).thenReturn(Optional.of(new Usuario()));
 
         OPomboException exception = assertThrows(OPomboException.class, () -> {
             usuarioService.salvar(usuario);
