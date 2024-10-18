@@ -2,11 +2,15 @@ package com.opombo.controller;
 
 
 import com.opombo.auth.AuthenticationService;
+import com.opombo.exception.OPomboException;
+import com.opombo.model.entity.Usuario;
+import com.opombo.model.enums.TipoDeUsuario;
+import com.opombo.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/auth")
@@ -14,6 +18,12 @@ public class AuthenticationController {
 
     @Autowired
     private AuthenticationService authenticationService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     /**
      * Método de login padronizado -> Basic Auth
@@ -26,5 +36,17 @@ public class AuthenticationController {
     @PostMapping("authenticate")
     public String authenticate(Authentication authentication) {
         return authenticationService.authenticate(authentication);
+    }
+
+    @PostMapping("/novo-usuario")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void registrarUsuario(@RequestBody Usuario novoUsuario) throws OPomboException {
+
+        String senhaCifrada = passwordEncoder.encode(novoUsuario.getSenha());
+
+        novoUsuario.setSenha(senhaCifrada);
+        novoUsuario.setTipo(TipoDeUsuario.USUARIO);
+
+        usuarioService.salvar(novoUsuario);
     }
 }

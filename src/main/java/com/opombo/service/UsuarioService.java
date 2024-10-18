@@ -36,7 +36,7 @@ public class UsuarioService implements UserDetailsService {
             throw new OPomboException("CPF já cadastrado na base de dados.", HttpStatus.BAD_REQUEST);
         }
 
-        if(usuarioRepository.findByEmail(usuario.getEmail()) != null) {
+        if(usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
             throw new OPomboException("Email já cadastrado na base de dados.", HttpStatus.BAD_REQUEST);
         }
         return usuarioRepository.save(usuario);

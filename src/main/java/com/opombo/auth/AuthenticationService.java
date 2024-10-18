@@ -1,6 +1,5 @@
 package com.opombo.auth;
 
-
 import com.opombo.exception.OPomboException;
 import com.opombo.model.entity.Usuario;
 import org.springframework.http.HttpStatus;
@@ -38,7 +37,6 @@ public class AuthenticationService {
         if (usuarioAutenticado == null) {
             throw new OPomboException("Usuário não encontrado", HttpStatus.UNAUTHORIZED);
         }
-
         return usuarioAutenticado;
     }
 }

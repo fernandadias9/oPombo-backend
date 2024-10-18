@@ -34,6 +34,7 @@ public class Usuario implements UserDetails {
     private String email;
 
     @NotBlank(message = "Senha é obrigatória.")
+    @Column(length = 4000)
     private String senha;
 
     @NotBlank(message = "CPF é obrigatório")
