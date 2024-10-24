@@ -42,7 +42,7 @@ public class SecutiryConfig {
                         //Hierarquia de permissões e bloqueios
                         auth -> auth
                                 //URLs liberadas
-                                .requestMatchers("/authenticate", "/public", "/auth/novo-usuario").permitAll()
+                                .requestMatchers("/auth/*", "/public").permitAll()
 
                                 //Todas as demais são bloqueadas
                                 .anyRequest().authenticated())
