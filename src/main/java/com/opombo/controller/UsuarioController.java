@@ -20,12 +20,6 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping
-    public ResponseEntity<Usuario> salvar(@Valid @RequestBody Usuario novoUsuario) throws OPomboException {
-        novoUsuario = usuarioService.salvar(novoUsuario);
-        return ResponseEntity.ok(novoUsuario);
-    }
-
     @PutMapping
     public ResponseEntity<Usuario> atualizar(@Valid @RequestBody Usuario usuario) {
         usuario = usuarioService.atualizar(usuario);
