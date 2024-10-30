@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class Denuncia {
 
     @EmbeddedId
-    private DenunciaPK id;
+    private DenunciaPK id = new DenunciaPK();
 
     @ManyToOne
     @MapsId("idMensagem")

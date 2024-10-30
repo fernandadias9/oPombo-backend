@@ -9,6 +9,7 @@ import com.opombo.model.enums.MotivoDaDenuncia;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -64,31 +65,60 @@ public class DenunciaRepositoryTest {
     }
 
     @Test
+    @DisplayName("Deve lançar um excessão, pois o motivo está em branco.")
     public void testeCriarDenunciaMotivoNaoPreenchido() {
-        Usuario usuarioTest1 = new Usuario();
-        usuarioTest1.setNome("Test");
-        usuarioTest1.setEmail("test@mail.com");
-        usuarioTest1.setCpf("34348230005");
-        usuarioTest1.setSenha("test123");
-        usuarioRepository.saveAndFlush(usuarioTest1);
+        Usuario usuarioTest = new Usuario();
+        usuarioTest.setNome("Test denúncia sem motivo");
+        usuarioTest.setEmail("test1@mail.com");
+        usuarioTest.setCpf("33375125003");
+        usuarioTest.setSenha("test01");
+        usuarioRepository.save(usuarioTest);
 
-        Mensagem mensagemTest1 = new Mensagem();
-        mensagemTest1.setTexto("Mensagem de teste");
-        mensagemTest1.setPublicador(usuarioTest1);
-        mensagemRepository.saveAndFlush(mensagemTest1);
+        Mensagem mensagemTest = new Mensagem();
+        mensagemTest.setTexto("Mensagem de teste");
+        mensagemTest.setPublicador(usuarioTest);
+        mensagemRepository.save(mensagemTest);
 
-        Denuncia denunciaTeste1 = new Denuncia();
-        denunciaTeste1.setMensagem(mensagemTest1);
-        denunciaTeste1.setUsuario(usuarioTest1);
+        DenunciaPK denunciaPK = new DenunciaPK();
+        denunciaPK.setIdMensagem(mensagemTest.getId());
+        denunciaPK.setIdUsuario(usuarioTest.getId());
 
-        DenunciaPK pk = new DenunciaPK();
-        pk.setIdMensagem(mensagemTest1.getId());
-        pk.setIdUsuario(usuarioTest1.getId());
-        denunciaTeste1.setId(pk);
+        Denuncia denunciaTeste = new Denuncia();
+        denunciaTeste.setId(denunciaPK);
+        denunciaTeste.setMensagem(mensagemTest);
+        denunciaTeste.setUsuario(usuarioTest);
 
-        assertThatThrownBy(() -> denunciaRepository.saveAndFlush(denunciaTeste1)).isInstanceOf(ConstraintViolationException.class)
+        assertThatThrownBy(() -> denunciaRepository.saveAndFlush(denunciaTeste)).isInstanceOf(ConstraintViolationException.class)
                 .hasMessageContaining("Motivo é obrigatório");
     }
 
+    @Test
+    @DisplayName("Deve retornar todas as denúncias como DenunciaDTO")
+    public void testFindAllDenunciasDTO() {
+        Denuncia denuncia = denunciaRepository.findAll().get(0);
+        String idMensagem = denuncia.getMensagem().getId();
+        String idUsuario = denuncia.getUsuario().getId();
 
+        List<DenunciaDTO> denunciasDTO = denunciaRepository.findAllDenunciasDTO();
+
+        assertFalse(denunciasDTO.isEmpty());
+
+        DenunciaDTO denunciaDTO = denunciasDTO.get(0);
+        assertEquals(idMensagem, denunciaDTO.getIdMensagem());
+        assertEquals(idUsuario, denunciaDTO.getIdUsuario());
+        assertEquals(MotivoDaDenuncia.INFORMACAO_FALSA, denunciaDTO.getMotivo());
+    }
+
+    @Test
+    @DisplayName("Deve retornar denúncias associadas a uma mensagem específica pelo ID")
+    public void testFindByMensagemId() {
+        String idMensagem = mensagemRepository.findAll().get(0).getId();
+        List<Denuncia> denuncias = denunciaRepository.findByMensagemId(idMensagem);
+
+        assertFalse(denuncias.isEmpty());
+
+        for (Denuncia denuncia : denuncias) {
+            assertEquals(idMensagem, denuncia.getMensagem().getId());
+        }
+    }
 }
