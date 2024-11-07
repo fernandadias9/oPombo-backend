@@ -33,6 +33,9 @@ public class Mensagem {
 
     private int qtdeLikes = 0;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String imagem;
+
     @ManyToMany
     @JoinTable(
             name = "curtidas",

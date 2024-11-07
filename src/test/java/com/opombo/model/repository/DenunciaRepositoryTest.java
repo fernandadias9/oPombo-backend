@@ -49,7 +49,12 @@ public class DenunciaRepositoryTest {
         mensagemTest.setPublicador(usuarioTest);
         mensagemRepository.save(mensagemTest);
 
+        DenunciaPK denunciaPK = new DenunciaPK();
+        denunciaPK.setIdMensagem(mensagemTest.getId());
+        denunciaPK.setIdUsuario(usuarioTest.getId());
+
         Denuncia denunciaTeste = new Denuncia();
+        denunciaTeste.setId(denunciaPK);
         denunciaTeste.setMensagem(mensagemTest);
         denunciaTeste.setUsuario(usuarioTest);
         denunciaTeste.setMotivo(MotivoDaDenuncia.INFORMACAO_FALSA);
@@ -121,4 +126,6 @@ public class DenunciaRepositoryTest {
             assertEquals(idMensagem, denuncia.getMensagem().getId());
         }
     }
+
+
 }
