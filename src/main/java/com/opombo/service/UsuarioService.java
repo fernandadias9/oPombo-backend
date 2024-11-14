@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -22,6 +23,9 @@ public class UsuarioService implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private ImagemService imagemService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -72,5 +76,16 @@ public class UsuarioService implements UserDetailsService {
             return usuarioRepository.findAll(filtros, pagina).toList();
         }
         return usuarioRepository.findAll(filtros);
+    }
+
+    public void salvarFotoPerfil(MultipartFile imagem, String idUsuario) throws OPomboException {
+
+        Usuario usuarioFotoPerfil = usuarioRepository.findById(idUsuario).orElseThrow(() -> new OPomboException("Usuário não encontrado", HttpStatus.INTERNAL_SERVER_ERROR));
+
+        String imagemBase64 = imagemService.processarImagem(imagem);
+
+        usuarioFotoPerfil.setFotoPerfil(imagemBase64);
+
+        usuarioRepository.save(usuarioFotoPerfil);
     }
 }

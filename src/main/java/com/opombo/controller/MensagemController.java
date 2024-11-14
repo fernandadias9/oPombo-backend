@@ -1,5 +1,7 @@
 package com.opombo.controller;
 
+import com.opombo.auth.AuthenticationService;
+import com.opombo.exception.OPomboException;
 import com.opombo.model.dto.ListaMensagensDTO;
 import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
@@ -9,8 +11,10 @@ import com.opombo.service.MensagemService;
 import com.opombo.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -24,6 +28,9 @@ public class MensagemController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private AuthenticationService authService;
 
     @PostMapping
     public ResponseEntity<Mensagem> salvar(@Valid @RequestBody Mensagem novaMensagem) {
@@ -71,4 +78,20 @@ public class MensagemController {
         mensagemService.bloquearOuDesbloquearMensagem(mensagem);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/upload")
+    public void fazerUploadFotoPerfil(@RequestParam("imagem") MultipartFile imagem, String idMensagem) throws OPomboException {
+
+        if(imagem == null) {
+            throw new OPomboException("Arquivo inválido.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        Usuario usuarioAutenticado = authService.getUsuarioAutenticado();
+        if (usuarioAutenticado == null ) {
+            throw new OPomboException("Usuário não encontrado.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        mensagemService.salvarImagem(imagem, idMensagem);
+    }
+
 }
