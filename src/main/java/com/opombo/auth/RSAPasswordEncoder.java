@@ -49,6 +49,14 @@ public class RSAPasswordEncoder implements PasswordEncoder {
             // Comparar a senha original com a decifrada
             String decryptedPassword = new String(decryptedBytes, StandardCharsets.UTF_8);
             return rawPassword.toString().equals(decryptedPassword);
+
+            // Como pegar o salt? **
+
+//            String senhaInformadaComSalt = salt + rawPassword;
+//
+//            String senhaInformadaCifrada = this.encode(senhaInformadaComSalt);
+//
+//            return senhaInformadaCifrada.equals(encodedPassword);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao decifrar a senha com RSA", e);
         }

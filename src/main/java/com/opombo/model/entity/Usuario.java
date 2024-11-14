@@ -37,6 +37,9 @@ public class Usuario implements UserDetails {
     @Column(length = 4000)
     private String senha;
 
+//    @Column(length = 255, nullable = false)
+//    private String salt;
+
     @NotBlank(message = "CPF é obrigatório")
     @CPF
     private String cpf;

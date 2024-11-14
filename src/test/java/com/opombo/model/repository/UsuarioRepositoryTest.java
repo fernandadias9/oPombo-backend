@@ -31,7 +31,7 @@ public class UsuarioRepositoryTest {
         usuario.setNome("Usuario Teste");
         usuario.setCpf("40331786940");
         usuario.setEmail("usuario@email.com");
-        usuario.setSenha("senha123");  // Definindo a senha
+        usuario.setSenha("senha123");
         usuario.setTipo(TipoDeUsuario.ADMINISTRADOR);
 
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
@@ -44,12 +44,13 @@ public class UsuarioRepositoryTest {
     }
 
     @Test
-    @DisplayName("Deve lançar um excessão pois o nome está em branco")
+    @DisplayName("Deve lançar uma excessão pois o nome está em branco")
     void deveFalharAoSalvarUsuarioComNomeEmBranco() {
         // Dado
         Usuario usuario = new Usuario();
         usuario.setCpf("12345678900");
         usuario.setEmail("teste@teste.com");
+        usuario.setSenha("senha123");
         usuario.setNome("");
         usuario.setTipo(TipoDeUsuario.USUARIO);
 
@@ -61,11 +62,12 @@ public class UsuarioRepositoryTest {
     }
 
     @Test
-    @DisplayName("Deve lançar um excessão pois o nome tem menos que 3 caracteres")
+    @DisplayName("Deve lançar uma excessão pois o nome tem menos que 3 caracteres")
     void deveFalharAoSalvarUsuarioComNomeMenorQue3Caracteres() {
         Usuario usuario = new Usuario();
         usuario.setCpf("26253943669");
         usuario.setEmail("teste3caracteres@teste.com");
+        usuario.setSenha("senha123");
         usuario.setNome("Jo");
         usuario.setTipo(TipoDeUsuario.USUARIO);
 
@@ -75,11 +77,12 @@ public class UsuarioRepositoryTest {
     }
 
     @Test
-    @DisplayName("Deve lançar um excessão pois o nome tem mais que 100 caracteres")
+    @DisplayName("Deve lançar uma excessão pois o nome tem mais que 100 caracteres")
     void deveFalharAoSalvarUsuarioComNomeMaiorQue100Caracteres() {
         Usuario usuario = new Usuario();
         usuario.setCpf("30218552610");
         usuario.setEmail("teste@teste.com");
+        usuario.setSenha("senha123");
         usuario.setNome("Esse nome tem que ter mais de cem caracteres para não passar no teste de validação do nome portanto vou ficar enrolando aqui.");
         usuario.setTipo(TipoDeUsuario.USUARIO);
 
@@ -89,13 +92,14 @@ public class UsuarioRepositoryTest {
     }
 
     @Test
-    @DisplayName("Deve lançar um excessão pois o email está em branco")
+    @DisplayName("Deve lançar uma excessão pois o email está em branco")
     void deveFalharAoSalvarUsuarioComEmailEmBranco() {
         // Dado
         Usuario usuario = new Usuario();
         usuario.setCpf("12345678900");
         usuario.setEmail("");
         usuario.setNome("Teste email");
+        usuario.setSenha("senha123");
         usuario.setTipo(TipoDeUsuario.USUARIO);
 
         assertThrows(ConstraintViolationException.class, () -> {
@@ -104,12 +108,13 @@ public class UsuarioRepositoryTest {
     }
 
     @Test
-    @DisplayName("Deve lançar um excessão pois o email é inválido")
+    @DisplayName("Deve lançar uma excessão pois o email é inválido")
     void deveFalharAoSalvarUsuarioComEmailInvalido() {
         Usuario usuario = new Usuario();
         usuario.setCpf("40683139622");
         usuario.setNome("Nome Valido");
         usuario.setEmail("emailinvalido");
+        usuario.setSenha("senha123");
         usuario.setTipo(TipoDeUsuario.USUARIO);
 
         assertThrows(ConstraintViolationException.class, () -> {
@@ -124,6 +129,7 @@ public class UsuarioRepositoryTest {
         usuario.setCpf("");
         usuario.setEmail("testecpf@teste.com");
         usuario.setNome("Teste cpf");
+        usuario.setSenha("senha123");
         usuario.setTipo(TipoDeUsuario.USUARIO);
 
         assertThrows(ConstraintViolationException.class, () -> {
@@ -138,8 +144,27 @@ public class UsuarioRepositoryTest {
         usuario.setNome("Nome Valido");
         usuario.setEmail("usuario@testecpf.com");
         usuario.setCpf("12345678900");
+        usuario.setSenha("senha123");
         usuario.setTipo(TipoDeUsuario.USUARIO);
 
+        assertThrows(ConstraintViolationException.class, () -> {
+            usuarioRepository.saveAndFlush(usuario);
+        });
+    }
+
+    @Test
+    @DisplayName("Deve lançar uma excessão pois a senha está em branco")
+    void deveFalharAoSalvarUsuarioComSenhaEmBranco() {
+        // Dado
+        Usuario usuario = new Usuario();
+        usuario.setCpf("28201431057");
+        usuario.setEmail("testesenha@teste.com");
+        usuario.setSenha("");
+        usuario.setNome("Senha em branco");
+        usuario.setTipo(TipoDeUsuario.USUARIO);
+
+        // Quando & Então
+        // Tenta salvar o usuário no banco e espera-se que ocorra um erro de validação
         assertThrows(ConstraintViolationException.class, () -> {
             usuarioRepository.saveAndFlush(usuario);
         });

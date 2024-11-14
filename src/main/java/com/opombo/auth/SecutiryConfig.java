@@ -1,6 +1,5 @@
 package com.opombo.auth;
 
-
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -19,9 +18,13 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -51,6 +54,26 @@ public class SecutiryConfig {
                         conf -> conf.jwt(Customizer.withDefaults()));
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Libera a origem do Angular
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos HTTP permitidos
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Access-Control-Allow-Origin",
+                "Access-Control-Allow-Headers","Access-Control-Expose-Headers",
+                "Accept","Origin","X-Requested-With","Access-Control-Request-Method",
+                "Access-Control-Request-Headers", "Access-Control-Allow-Credentials",
+                "Content-Length","Content-Encoding","Connection"
+        )); // Cabeçalhos permitidos
+
+        configuration.setAllowCredentials(true); // Permite envio de credenciais (cookies, por exemplo)
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:4200/*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean

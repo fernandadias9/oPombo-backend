@@ -32,19 +32,13 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public List<Usuario> listar() {
+    public List<Usuario> listar() throws OPomboException {
         return usuarioService.listar();
     }
 
     @PostMapping("/filtro")
     public List<Usuario> pesquisarComFiltro(@RequestBody UsuarioFiltro filtro) {
         return usuarioService.listarComFiltro(filtro);
-    }
-
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable String id) {
-        usuarioService.excluir(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/mensagensCurtidas/{id}")

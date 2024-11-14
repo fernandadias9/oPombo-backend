@@ -2,16 +2,25 @@ package com.opombo.auth;
 
 import com.opombo.exception.OPomboException;
 import com.opombo.model.entity.Usuario;
+import com.opombo.model.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+
+import java.security.SecureRandom;
+import java.util.Base64;
 
 @Service
 public class AuthenticationService {
 
     private final JwtService jwtService;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     public AuthenticationService(JwtService jwtService) {
         this.jwtService = jwtService;
@@ -28,15 +37,22 @@ public class AuthenticationService {
         if (authentication != null && authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
 
-            if (principal instanceof Usuario) {
-                UserDetails userDetails = (Usuario) principal;
-                usuarioAutenticado = (Usuario) userDetails;
-            }
+            Jwt jwt = (Jwt) principal;
+            String login = jwt.getClaim("sub");
+
+            usuarioAutenticado = usuarioRepository.findByEmail(login)
+                    .orElseThrow(() -> new OPomboException("Usuário não encontrado", HttpStatus.UNAUTHORIZED));
         }
 
-        if (usuarioAutenticado == null) {
+        if(usuarioAutenticado == null) {
             throw new OPomboException("Usuário não encontrado", HttpStatus.UNAUTHORIZED);
         }
         return usuarioAutenticado;
     }
+
+//    public String generateSalt() {
+//        byte[] salt = new byte[16];
+//        new SecureRandom().nextBytes(salt);
+//        return Base64.getEncoder().encodeToString(salt);
+//    }
 }

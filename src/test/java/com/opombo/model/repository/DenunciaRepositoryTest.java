@@ -36,7 +36,7 @@ public class DenunciaRepositoryTest {
     private UsuarioRepository usuarioRepository;
 
     @BeforeEach
-    public void setup() {
+    public void setUp() {
         Usuario usuarioTest = new Usuario();
         usuarioTest.setNome("Test");
         usuarioTest.setEmail("test@mail.com");
@@ -49,7 +49,12 @@ public class DenunciaRepositoryTest {
         mensagemTest.setPublicador(usuarioTest);
         mensagemRepository.save(mensagemTest);
 
+        DenunciaPK denunciaPK = new DenunciaPK();
+        denunciaPK.setIdMensagem(mensagemTest.getId());
+        denunciaPK.setIdUsuario(usuarioTest.getId());
+
         Denuncia denunciaTeste = new Denuncia();
+        denunciaTeste.setId(denunciaPK);
         denunciaTeste.setMensagem(mensagemTest);
         denunciaTeste.setUsuario(usuarioTest);
         denunciaTeste.setMotivo(MotivoDaDenuncia.INFORMACAO_FALSA);

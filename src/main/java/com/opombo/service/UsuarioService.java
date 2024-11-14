@@ -1,8 +1,10 @@
 package com.opombo.service;
 
+import com.opombo.auth.AuthenticationService;
 import com.opombo.exception.OPomboException;
 import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
+import com.opombo.model.enums.TipoDeUsuario;
 import com.opombo.model.filtro.UsuarioFiltro;
 import com.opombo.model.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class UsuarioService implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -50,12 +55,11 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRepository.findById(id).get();
     }
 
-    public List<Usuario> listar() {
+    public List<Usuario> listar() throws OPomboException {
+//        if(!authenticationService.getUsuarioAutenticado().getTipo().equals(TipoDeUsuario.ADMINISTRADOR)) {
+//            throw new OPomboException("Usuário não autorizado", HttpStatus.UNAUTHORIZED);
+//        }
         return usuarioRepository.findAll();
-    }
-
-    public void excluir(String id) {
-        usuarioRepository.deleteById(id);
     }
 
     public Set<Mensagem> obterMensagensCurtidas(String idUsuario) {
