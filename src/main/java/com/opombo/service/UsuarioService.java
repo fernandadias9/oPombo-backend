@@ -51,6 +51,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public Usuario buscar(String id) {
+
         return usuarioRepository.findById(id).get();
     }
 

@@ -1,5 +1,6 @@
 package com.opombo.service;
 
+import com.opombo.auth.RSAMensagemEncoder;
 import com.opombo.exception.OPomboException;
 import com.opombo.model.dto.ListaMensagensDTO;
 import com.opombo.model.entity.Mensagem;
@@ -29,11 +30,26 @@ public class MensagemService {
     @Autowired
     private ImagemService imagemService;
 
-    public Mensagem salvar(Mensagem mensagem) {
+    @Autowired
+    private RSAMensagemEncoder mensagemEncoder;
+
+    public Mensagem salvar(Mensagem mensagem) throws OPomboException {
+
+        if (mensagem.getTexto().length() > 300) {
+            throw new OPomboException("Mensagem pode ter no máximo 300 caracteres.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        mensagem.setTexto(mensagemEncoder.encode(mensagem.getTexto()));
+
         return mensagemRepository.save(mensagem);
     }
 
-    public Mensagem buscar(String id) {
+    public Mensagem buscar(String id) throws OPomboException {
+
+        Mensagem mensagem = mensagemRepository.findById(id).orElseThrow(() -> new OPomboException("Mensagem não encontrada!", HttpStatus.NOT_FOUND));
+
+        mensagem.setTexto(mensagemEncoder.decode(mensagem.getTexto()));
+
         return mensagemRepository.findById(id).get();
     }
 
@@ -51,7 +67,7 @@ public class MensagemService {
         return mensagemRepository.findAll(filtros);
     }
 
-    public void curtir(String idMensagem, Usuario usuario) {
+    public void curtir(String idMensagem, Usuario usuario) throws OPomboException {
         Mensagem mensagem = buscar(idMensagem);
         if (mensagem != null) {
             Set<Usuario> usuariosQueCurtiram = mensagem.getUsuariosQueCurtiram();
@@ -65,7 +81,7 @@ public class MensagemService {
         }
     }
 
-    public void bloquearOuDesbloquearMensagem(Mensagem mensagem) {
+    public void bloquearOuDesbloquearMensagem(Mensagem mensagem) throws OPomboException {
         if (mensagem.getBloqueado() == false) {
             mensagem.setBloqueado(true);
         } else {
@@ -74,7 +90,7 @@ public class MensagemService {
         salvar(mensagem);
     }
 
-    public Set<Usuario> obterUsuariosQueCurtiram(String idMensagem) {
+    public Set<Usuario> obterUsuariosQueCurtiram(String idMensagem) throws OPomboException {
         Mensagem mensagem = buscar(idMensagem);
         if (mensagem != null) {
             return mensagem.getUsuariosQueCurtiram();

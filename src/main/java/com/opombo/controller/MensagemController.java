@@ -33,13 +33,13 @@ public class MensagemController {
     private AuthenticationService authService;
 
     @PostMapping
-    public ResponseEntity<Mensagem> salvar(@Valid @RequestBody Mensagem novaMensagem) {
+    public ResponseEntity<Mensagem> salvar(@Valid @RequestBody Mensagem novaMensagem) throws OPomboException {
         novaMensagem = mensagemService.salvar(novaMensagem);
         return ResponseEntity.ok(novaMensagem);
     }
 
     @GetMapping(path = "/{id}")
-    public Mensagem buscar(@PathVariable String id) {
+    public Mensagem buscar(@PathVariable String id) throws OPomboException {
         return mensagemService.buscar(id);
     }
 
@@ -60,20 +60,20 @@ public class MensagemController {
     }
 
     @PutMapping(path = "/curtir/{idUsuario}/{idMensagem}")
-    public ResponseEntity<Void> curtir(@PathVariable String idUsuario, @PathVariable String idMensagem) {
+    public ResponseEntity<Void> curtir(@PathVariable String idUsuario, @PathVariable String idMensagem) throws OPomboException {
         Usuario usuario = this.usuarioService.buscar(idUsuario);
         mensagemService.curtir(idMensagem, usuario);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping(path = "/curtidas/{id}")
-    public ResponseEntity<Set<Usuario>> obterUsuariosQueCurtiram(@PathVariable String id) {
+    public ResponseEntity<Set<Usuario>> obterUsuariosQueCurtiram(@PathVariable String id) throws OPomboException {
         Set<Usuario> usuarios = mensagemService.obterUsuariosQueCurtiram(id);
         return ResponseEntity.ok(usuarios);
     }
     
     @PutMapping(path = "/bloqueio/{id}")
-    public ResponseEntity<Void> bloquear(@PathVariable String id) {
+    public ResponseEntity<Void> bloquear(@PathVariable String id) throws OPomboException {
         Mensagem mensagem = buscar(id);
         mensagemService.bloquearOuDesbloquearMensagem(mensagem);
         return ResponseEntity.ok().build();
