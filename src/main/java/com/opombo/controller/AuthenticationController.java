@@ -10,11 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping(path = "/auth")
-@CrossOrigin(origins = "http://localhost:4200")
 public class AuthenticationController {
 
     @Autowired
@@ -28,7 +26,6 @@ public class AuthenticationController {
 
     /**
      * Método de login padronizado -> Basic Auth
-     *
      *  O parâmetro Authentication já encapsula login (username) e senha (password)
      *  Basic <Base64 encoded username and password>
      * @param authentication
