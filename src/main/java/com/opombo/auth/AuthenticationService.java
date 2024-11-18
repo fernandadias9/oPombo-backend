@@ -11,16 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
-import java.util.Base64;
-
 @Service
 public class AuthenticationService {
 
     private final JwtService jwtService;
 
     @Autowired
-    UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
 
     public AuthenticationService(JwtService jwtService) {
         this.jwtService = jwtService;
@@ -49,10 +46,4 @@ public class AuthenticationService {
         }
         return usuarioAutenticado;
     }
-
-//    public String generateSalt() {
-//        byte[] salt = new byte[16];
-//        new SecureRandom().nextBytes(salt);
-//        return Base64.getEncoder().encodeToString(salt);
-//    }
 }

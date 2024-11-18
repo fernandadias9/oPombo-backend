@@ -21,7 +21,8 @@ public class Mensagem {
     private String id;
 
     @NotBlank(message = "Mensagem é obrigatória")
-    @Size(min = 1, max = 300)
+    @Column(length = 4000)
+    //@Size(min = 1, max = 300)
     private String texto;
 
     @ManyToOne
@@ -32,6 +33,9 @@ public class Mensagem {
     private LocalDateTime criadoEm;
 
     private int qtdeLikes = 0;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String imagem;
 
     @ManyToMany
     @JoinTable(

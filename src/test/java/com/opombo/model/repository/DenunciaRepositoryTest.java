@@ -126,4 +126,6 @@ public class DenunciaRepositoryTest {
             assertEquals(idMensagem, denuncia.getMensagem().getId());
         }
     }
+
+
 }

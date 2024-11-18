@@ -47,6 +47,9 @@ public class Usuario implements UserDetails {
     @Enumerated(EnumType.STRING)
     private TipoDeUsuario tipo;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String fotoPerfil;
+
     @JsonBackReference
     @ManyToMany
     @JoinTable(
