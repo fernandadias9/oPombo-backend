@@ -53,10 +53,6 @@ public class MensagemService {
         return mensagemRepository.findById(id).get();
     }
 
-    public List<Mensagem> listar() {
-        return mensagemRepository.findAll();
-    }
-
     public List<Mensagem> listarComFiltro(MensagemFiltro filtros) {
         if (filtros.temPaginacao()) {
             int pageNumber = filtros.getPagina();

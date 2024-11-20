@@ -6,7 +6,6 @@ import com.opombo.model.dto.ListaMensagensDTO;
 import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
 import com.opombo.model.filtro.MensagemFiltro;
-import com.opombo.model.filtro.UsuarioFiltro;
 import com.opombo.service.MensagemService;
 import com.opombo.service.UsuarioService;
 import jakarta.validation.Valid;
@@ -21,6 +20,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(path = "api/mensagem")
+@CrossOrigin(origins = "http://localhost:4200")
 public class MensagemController {
 
     @Autowired
@@ -47,11 +47,6 @@ public class MensagemController {
     public ResponseEntity<List<ListaMensagensDTO>> listarMensagens() {
         List<ListaMensagensDTO> mensagens = mensagemService.listarMensagens();
         return ResponseEntity.ok(mensagens);
-    }
-
-    @GetMapping("/todas")
-    public List<Mensagem> listar() {
-        return mensagemService.listar();
     }
 
     @PostMapping("/filtro")
