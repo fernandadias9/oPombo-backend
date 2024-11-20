@@ -30,16 +30,11 @@ public class MensagemService {
     @Autowired
     private ImagemService imagemService;
 
-    @Autowired
-    private RSAMensagemEncoder mensagemEncoder;
-
     public Mensagem salvar(Mensagem mensagem) throws OPomboException {
 
         if (mensagem.getTexto().length() > 300) {
             throw new OPomboException("Mensagem pode ter no máximo 300 caracteres.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        mensagem.setTexto(mensagemEncoder.encode(mensagem.getTexto()));
 
         return mensagemRepository.save(mensagem);
     }
@@ -47,8 +42,6 @@ public class MensagemService {
     public Mensagem buscar(String id) throws OPomboException {
 
         Mensagem mensagem = mensagemRepository.findById(id).orElseThrow(() -> new OPomboException("Mensagem não encontrada!", HttpStatus.NOT_FOUND));
-
-        mensagem.setTexto(mensagemEncoder.decode(mensagem.getTexto()));
 
         return mensagemRepository.findById(id).get();
     }
@@ -103,6 +96,7 @@ public class MensagemService {
 
         return mensagens.stream().map(mensagem -> {
             int quantidadeDenuncias = denunciaService.buscarDenunciasPorMensagem(mensagem.getId()).size();
+
             if (mensagem.getBloqueado()) {
                 mensagem.setTexto("Bloqueada pelo administrador.");
             }
