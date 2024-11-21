@@ -1,6 +1,8 @@
 package com.opombo.service;
 
+import com.opombo.auth.RSAPasswordEncoder;
 import com.opombo.exception.OPomboException;
+import com.opombo.model.dto.UsuarioDTO;
 import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
 import com.opombo.model.filtro.UsuarioFiltro;
@@ -27,6 +29,9 @@ public class UsuarioService implements UserDetailsService {
     @Autowired
     private ImagemService imagemService;
 
+    @Autowired
+    private RSAPasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return usuarioRepository.findByEmail(username)
@@ -36,18 +41,32 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public Usuario salvar(Usuario usuario) throws OPomboException {
-        if(usuarioRepository.findByCpf(usuario.getCpf()) != null) {
+        if (usuarioRepository.findByCpf(usuario.getCpf()) != null) {
             throw new OPomboException("CPF já cadastrado na base de dados.", HttpStatus.BAD_REQUEST);
         }
 
-        if(usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
+        if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
             throw new OPomboException("Email já cadastrado na base de dados.", HttpStatus.BAD_REQUEST);
         }
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario atualizar(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+    public Usuario atualizar(UsuarioDTO usuarioDTO) throws OPomboException {
+        Usuario usuarioExistente = usuarioRepository.findById(usuarioDTO.getId())
+                .orElseThrow(() -> new OPomboException("Usuário não encontrado", HttpStatus.BAD_REQUEST));
+
+        if (usuarioDTO.getNome() != null) {
+            usuarioExistente.setNome(usuarioDTO.getNome());
+        }
+        if (usuarioDTO.getEmail() != null) {
+            usuarioExistente.setEmail(usuarioDTO.getEmail());
+        }
+
+        if (usuarioDTO.getSenha() != null) {
+            usuarioExistente.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        }
+
+        return usuarioRepository.save(usuarioExistente);
     }
 
     public Usuario buscar(String id) {
@@ -69,7 +88,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public List<Usuario> listarComFiltro(UsuarioFiltro filtros) {
-        if(filtros.temPaginacao()) {
+        if (filtros.temPaginacao()) {
             int pageNumber = filtros.getPagina();
             int pageSize = filtros.getLimite();
 
@@ -81,7 +100,8 @@ public class UsuarioService implements UserDetailsService {
 
     public void salvarFotoPerfil(MultipartFile imagem, String idUsuario) throws OPomboException {
 
-        Usuario usuarioFotoPerfil = usuarioRepository.findById(idUsuario).orElseThrow(() -> new OPomboException("Usuário não encontrado", HttpStatus.INTERNAL_SERVER_ERROR));
+        Usuario usuarioFotoPerfil = usuarioRepository.findById(idUsuario).orElseThrow(() ->
+                new OPomboException("Usuário não encontrado", HttpStatus.INTERNAL_SERVER_ERROR));
 
         String imagemBase64 = imagemService.processarImagem(imagem);
 

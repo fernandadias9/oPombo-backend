@@ -2,6 +2,7 @@ package com.opombo.controller;
 
 import com.opombo.auth.AuthenticationService;
 import com.opombo.exception.OPomboException;
+import com.opombo.model.dto.UsuarioDTO;
 import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
 import com.opombo.model.filtro.UsuarioFiltro;
@@ -26,10 +27,10 @@ public class UsuarioController {
     @Autowired
     private AuthenticationService authService;
 
-    @PutMapping
-    public ResponseEntity<Usuario> atualizar(@Valid @RequestBody Usuario usuario) {
-        usuario = usuarioService.atualizar(usuario);
-        return ResponseEntity.ok(usuario);
+    @PutMapping(path = "/atualizar")
+    public ResponseEntity<Usuario> atualizar(@Valid @RequestBody UsuarioDTO usuarioDTO) throws OPomboException {
+        Usuario usuarioAtualizado = usuarioService.atualizar(usuarioDTO);
+        return ResponseEntity.ok(usuarioAtualizado);
     }
 
     @GetMapping(path = "/{id}")

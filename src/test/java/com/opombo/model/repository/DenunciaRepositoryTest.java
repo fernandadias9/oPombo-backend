@@ -18,8 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 
@@ -70,7 +69,7 @@ public class DenunciaRepositoryTest {
     }
 
     @Test
-    @DisplayName("Deve lançar um excessão, pois o motivo está em branco.")
+    @DisplayName("Deve lançar um exceção, pois o motivo está em branco.")
     public void testeCriarDenunciaMotivoNaoPreenchido() {
         Usuario usuarioTest = new Usuario();
         usuarioTest.setNome("Test denúncia sem motivo");
@@ -98,6 +97,34 @@ public class DenunciaRepositoryTest {
     }
 
     @Test
+    @DisplayName("Deve lançar um exceção, pois o motivo está em branco.")
+    public void testeCriarDenunciaSucesso() {
+        Usuario usuarioTest = new Usuario();
+        usuarioTest.setNome("Test denúncia sem motivo");
+        usuarioTest.setEmail("test1@mail.com");
+        usuarioTest.setCpf("33375125003");
+        usuarioTest.setSenha("test01");
+        usuarioRepository.save(usuarioTest);
+
+        Mensagem mensagemTest = new Mensagem();
+        mensagemTest.setTexto("Mensagem de teste");
+        mensagemTest.setPublicador(usuarioTest);
+        mensagemRepository.save(mensagemTest);
+
+        DenunciaPK denunciaPK = new DenunciaPK();
+        denunciaPK.setIdMensagem(mensagemTest.getId());
+        denunciaPK.setIdUsuario(usuarioTest.getId());
+
+        Denuncia denunciaTeste = new Denuncia();
+        denunciaTeste.setId(denunciaPK);
+        denunciaTeste.setMensagem(mensagemTest);
+        denunciaTeste.setUsuario(usuarioTest);
+        denunciaTeste.setMotivo(MotivoDaDenuncia.PUBLICACAO_CALUNIOSA);
+
+        denunciaRepository.saveAndFlush(denunciaTeste);
+    }
+
+    @Test
     @DisplayName("Deve retornar todas as denúncias como DenunciaDTO")
     public void testFindAllDenunciasDTO() {
         Denuncia denuncia = denunciaRepository.findAll().get(0);
@@ -115,6 +142,17 @@ public class DenunciaRepositoryTest {
     }
 
     @Test
+    @DisplayName("Deve retornar lista vazia quando não houver denúncias")
+    public void testFindAllDenunciasDTOEmpty() {
+        // Remove todas as denúncias para garantir que o banco esteja vazio
+        denunciaRepository.deleteAll();
+
+        // Verifica se a lista retornada está vazia
+        List<DenunciaDTO> denunciasDTO = denunciaRepository.findAllDenunciasDTO();
+        assertTrue(denunciasDTO.isEmpty());
+    }
+
+    @Test
     @DisplayName("Deve retornar denúncias associadas a uma mensagem específica pelo ID")
     public void testFindByMensagemId() {
         String idMensagem = mensagemRepository.findAll().get(0).getId();
@@ -127,5 +165,16 @@ public class DenunciaRepositoryTest {
         }
     }
 
+    @Test
+    @DisplayName("Deve retornar lista vazia quando não houver denúncias associadas à mensagem")
+    public void testFindByMensagemIdEmpty() {
+        // Usando um ID de mensagem que não existe no banco
+        String idMensagemInexistente = "idInexistente";
 
+        // Busca as denúncias associadas a esse ID
+        List<Denuncia> denuncias = denunciaRepository.findByMensagemId(idMensagemInexistente);
+
+        // Verifica se a lista retornada está vazia
+        assertTrue(denuncias.isEmpty());
+    }
 }

@@ -1,6 +1,7 @@
 package com.opombo.controller;
 
 import com.opombo.auth.AuthenticationService;
+import com.opombo.auth.RSAMensagemEncoder;
 import com.opombo.exception.OPomboException;
 import com.opombo.model.dto.ListaMensagensDTO;
 import com.opombo.model.entity.Mensagem;
@@ -31,6 +32,9 @@ public class MensagemController {
 
     @Autowired
     private AuthenticationService authService;
+
+    @Autowired
+    private RSAMensagemEncoder mensagemEncoder;
 
     @PostMapping
     public ResponseEntity<Mensagem> salvar(@Valid @RequestBody Mensagem novaMensagem) throws OPomboException {
