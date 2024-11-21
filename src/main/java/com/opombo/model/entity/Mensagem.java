@@ -1,9 +1,11 @@
 package com.opombo.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -38,6 +40,7 @@ public class Mensagem {
     private String imagem;
 
     @ManyToMany
+    @ToString.Exclude
     @JoinTable(
             name = "curtidas",
             joinColumns = @JoinColumn(name = "id_mensagem"),

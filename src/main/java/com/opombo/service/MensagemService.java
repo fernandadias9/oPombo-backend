@@ -7,8 +7,10 @@ import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
 import com.opombo.model.filtro.MensagemFiltro;
 import com.opombo.model.repository.MensagemRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,14 +32,32 @@ public class MensagemService {
     @Autowired
     private ImagemService imagemService;
 
-    public Mensagem salvar(Mensagem mensagem) throws OPomboException {
+    public Mensagem salvar(Mensagem mensagem, MultipartFile imagem) throws OPomboException {
 
         if (mensagem.getTexto().length() > 300) {
             throw new OPomboException("Mensagem pode ter no máximo 300 caracteres.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+        if(imagem != null && !imagem.isEmpty()) {
+            try {
+                String imagemBase64 = imagemService.processarImagem(imagem);
+                mensagem.setImagem(imagemBase64);
+            } catch (Exception e) {
+                throw new OPomboException("Erro ao processar a imagem.", HttpStatus.BAD_REQUEST);
+            }
+        }
+
         return mensagemRepository.save(mensagem);
     }
+
+//    public Mensagem salvar(Mensagem mensagem) throws OPomboException {
+//
+//        if (mensagem.getTexto().length() > 300) {
+//            throw new OPomboException("Mensagem pode ter no máximo 300 caracteres.", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//
+//        return mensagemRepository.save(mensagem);
+//    }
 
     public Mensagem buscar(String id) throws OPomboException {
 
@@ -60,17 +80,21 @@ public class MensagemService {
         return mensagemRepository.findAll(filtros);
     }
 
+    @Transactional
     public void curtir(String idMensagem, Usuario usuario) throws OPomboException {
         Mensagem mensagem = buscar(idMensagem);
         if (mensagem != null) {
             Set<Usuario> usuariosQueCurtiram = mensagem.getUsuariosQueCurtiram();
+
             if (usuariosQueCurtiram.contains(usuario)) {
                 usuariosQueCurtiram.remove(usuario);
             } else {
                 usuariosQueCurtiram.add(usuario);
             }
+            mensagemRepository.save(mensagem);
             mensagem.setQtdeLikes(usuariosQueCurtiram.size());
-            salvar(mensagem);
+        } else {
+            throw new OPomboException("Mensagem não encontrada", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -80,7 +104,7 @@ public class MensagemService {
         } else {
             mensagem.setBloqueado(false);
         }
-        salvar(mensagem);
+        mensagemRepository.save(mensagem);
     }
 
     public Set<Usuario> obterUsuariosQueCurtiram(String idMensagem) throws OPomboException {
