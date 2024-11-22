@@ -12,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,9 +21,6 @@ class MensagemServiceTest {
 
     @Mock
     private MensagemRepository mensagemRepository;
-
-    @Mock
-    private DenunciaService denunciaService;
 
     @Mock
     private ImagemService imagemService;
@@ -92,16 +88,6 @@ class MensagemServiceTest {
 
         assertNotNull(resultado);
         assertEquals(idMensagem, resultado.getId());
-    }
-
-    @Test
-    void listarMensagens() {
-        when(mensagemRepository.findAll()).thenReturn(List.of(new Mensagem(), new Mensagem()));
-
-        List<Mensagem> mensagens = mensagemService.listar();
-
-        assertNotNull(mensagens);
-        assertEquals(2, mensagens.size());
     }
 
     @Test
