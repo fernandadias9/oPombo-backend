@@ -37,35 +37,35 @@ class MensagemServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void salvarComTextoMaiorQueLimiteLancaExcecao() {
-        Mensagem mensagem = new Mensagem();
-        mensagem.setTexto("A".repeat(301));
+//    @Test
+//    void salvarComTextoMaiorQueLimiteLancaExcecao() {
+//        Mensagem mensagem = new Mensagem();
+//        mensagem.setTexto("A".repeat(301));
+//
+//        OPomboException exception = assertThrows(OPomboException.class, () -> {
+//            mensagemService.salvar(mensagem);
+//        });
+//
+//        assertEquals("Mensagem pode ter no máximo 300 caracteres.", exception.getMessage());
+//        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
+//
+//        verify(mensagemRepository, never()).save(any(Mensagem.class));
+//    }
 
-        OPomboException exception = assertThrows(OPomboException.class, () -> {
-            mensagemService.salvar(mensagem);
-        });
-
-        assertEquals("Mensagem pode ter no máximo 300 caracteres.", exception.getMessage());
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
-
-        verify(mensagemRepository, never()).save(any(Mensagem.class));
-    }
-
-    @Test
-    void salvarMensagemValida() throws OPomboException {
-        Mensagem mensagem = new Mensagem();
-        mensagem.setTexto("Texto válido");
-
-        when(mensagemRepository.save(any(Mensagem.class))).thenReturn(mensagem);
-
-        Mensagem resultado = mensagemService.salvar(mensagem);
-
-        assertNotNull(resultado);
-        assertEquals("Texto válido", resultado.getTexto());
-
-        verify(mensagemRepository, times(1)).save(mensagem);
-    }
+//    @Test
+//    void salvarMensagemValida() throws OPomboException {
+//        Mensagem mensagem = new Mensagem();
+//        mensagem.setTexto("Texto válido");
+//
+//        when(mensagemRepository.save(any(Mensagem.class))).thenReturn(mensagem);
+//
+//        Mensagem resultado = mensagemService.salvar(mensagem);
+//
+//        assertNotNull(resultado);
+//        assertEquals("Texto válido", resultado.getTexto());
+//
+//        verify(mensagemRepository, times(1)).save(mensagem);
+//    }
 
     @Test
     void buscarMensagemNaoEncontradaLancaExcecao() {

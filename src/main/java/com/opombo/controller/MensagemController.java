@@ -36,10 +36,18 @@ public class MensagemController {
     @Autowired
     private RSAMensagemEncoder mensagemEncoder;
 
+//    @PostMapping
+//    public ResponseEntity<Mensagem> salvar(@Valid @RequestBody Mensagem novaMensagem) throws OPomboException {
+//        novaMensagem = mensagemService.salvar(novaMensagem);
+//        return ResponseEntity.ok(novaMensagem);
+//    }
+
     @PostMapping
-    public ResponseEntity<Mensagem> salvar(@Valid @RequestBody Mensagem novaMensagem) throws OPomboException {
-        novaMensagem = mensagemService.salvar(novaMensagem);
-        return ResponseEntity.ok(novaMensagem);
+    public ResponseEntity<Mensagem> salvar(
+            @RequestPart("mensagem") Mensagem mensagem,
+            @RequestPart(value = "imagem", required = false) MultipartFile imagem) throws OPomboException {
+        Mensagem mensagemSalva = mensagemService.salvar(mensagem, imagem);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mensagemSalva);
     }
 
     @GetMapping(path = "/{id}")
