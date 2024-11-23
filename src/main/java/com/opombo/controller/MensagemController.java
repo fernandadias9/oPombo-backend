@@ -48,6 +48,7 @@ public class MensagemController {
             @RequestPart("mensagem") Mensagem mensagem,
             @RequestPart(value = "imagem", required = false) MultipartFile imagem) throws OPomboException {
         Usuario usuario = authService.getUsuarioAutenticado();
+        mensagem.setPublicador(usuario);
         Mensagem mensagemSalva = mensagemService.salvar(mensagem, imagem);
         return ResponseEntity.status(HttpStatus.CREATED).body(mensagemSalva);
     }

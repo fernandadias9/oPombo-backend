@@ -5,6 +5,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,13 +38,20 @@ public abstract class BaseFiltro {
         }
     }
 
-    public static void aplicarFiltroPeriodo(Root root, CriteriaBuilder cb, List<Predicate> predicates, LocalDateTime dataInicial, LocalDateTime dataFinal, String nomeAtributo) {
+    public static void aplicarFiltroPeriodo(Root root, CriteriaBuilder cb, List<Predicate> predicates, LocalDate dataInicial, LocalDate dataFinal, String nomeAtributo) {
         if (dataInicial != null && dataFinal != null) {
-            predicates.add(cb.between(root.get(nomeAtributo), dataInicial, dataFinal));
+            // Ambas as datas fornecidas
+            LocalDateTime inicioDoDia = dataInicial.atStartOfDay();
+            LocalDateTime finalDoDia = dataFinal.atTime(23, 59, 59, 999999999);
+            predicates.add(cb.between(root.get(nomeAtributo), inicioDoDia, finalDoDia));
         } else if (dataInicial != null) {
-            predicates.add(cb.greaterThanOrEqualTo(root.get(nomeAtributo), dataInicial));
+            // Apenas dataInicial fornecida
+            LocalDateTime inicioDoDia = dataInicial.atStartOfDay();
+            predicates.add(cb.greaterThanOrEqualTo(root.get(nomeAtributo), inicioDoDia));
         } else if (dataFinal != null) {
-            predicates.add(cb.lessThanOrEqualTo(root.get(nomeAtributo), dataFinal));
+            // Apenas dataFinal fornecida
+            LocalDateTime finalDoDia = dataFinal.atTime(23, 59, 59, 999999999);
+            predicates.add(cb.lessThanOrEqualTo(root.get(nomeAtributo), finalDoDia));
         }
     }
 }

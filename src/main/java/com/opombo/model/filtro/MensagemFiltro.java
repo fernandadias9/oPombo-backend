@@ -8,6 +8,7 @@ import jakarta.persistence.criteria.Root;
 import lombok.Data;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +17,13 @@ import java.util.List;
 public class MensagemFiltro extends BaseFiltro implements Specification<Mensagem> {
 
     private String texto;
-    private String idPublicador;
-    private LocalDateTime dataInicial;
-    private LocalDateTime dataFinal;
+    private String nomePublicador;
+    private LocalDate dataInicial;
+    private LocalDate dataFinal;
 
     public boolean temFiltro() {
         return  (filtroValido(this.texto))
-                || (filtroValido(this.idPublicador))
+                || (filtroValido(this.nomePublicador))
                 || (dataInicial != null)
                 || (dataFinal != null);
     }
@@ -35,8 +36,10 @@ public class MensagemFiltro extends BaseFiltro implements Specification<Mensagem
             predicates.add(cb.like(root.get("texto"), "%" + this.getTexto() + "%"));
         }
 
-        if(this.getIdPublicador() != null && this.getIdPublicador().trim().length() > 0) {
-            predicates.add(cb.like(root.get("publicador").get("id"), "%" + this.getIdPublicador() + "%"));
+        if(this.getNomePublicador() != null && this.getNomePublicador().trim().length() > 0) {
+            //Predicado --> operador (comparação), atributo/coluna, valor
+            //Forma 1: usando somente get
+            predicates.add(cb.like(root.get("publicador").get("nome"), "%" + this.getNomePublicador() + "%"));
         }
 
         aplicarFiltroPeriodo(root, cb, predicates, this.getDataInicial(), this.getDataFinal(), "criadoEm");
