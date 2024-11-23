@@ -6,6 +6,7 @@ import com.opombo.exception.OPomboException;
 import com.opombo.model.dto.ListaMensagensDTO;
 import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
+import com.opombo.model.enums.TipoDeUsuario;
 import com.opombo.model.filtro.MensagemFiltro;
 import com.opombo.model.filtro.UsuarioFiltro;
 import com.opombo.service.MensagemService;
@@ -46,6 +47,7 @@ public class MensagemController {
     public ResponseEntity<Mensagem> salvar(
             @RequestPart("mensagem") Mensagem mensagem,
             @RequestPart(value = "imagem", required = false) MultipartFile imagem) throws OPomboException {
+        Usuario usuario = authService.getUsuarioAutenticado();
         Mensagem mensagemSalva = mensagemService.salvar(mensagem, imagem);
         return ResponseEntity.status(HttpStatus.CREATED).body(mensagemSalva);
     }
@@ -71,9 +73,9 @@ public class MensagemController {
         return mensagemService.listarComFiltro(filtro);
     }
 
-    @PutMapping(path = "/curtir/{idUsuario}/{idMensagem}")
-    public ResponseEntity<Void> curtir(@PathVariable String idUsuario, @PathVariable String idMensagem) throws OPomboException {
-        Usuario usuario = this.usuarioService.buscar(idUsuario);
+    @PutMapping(path = "/curtir/{idMensagem}")
+    public ResponseEntity<Void> curtir(@PathVariable String idMensagem) throws OPomboException {
+        Usuario usuario = authService.getUsuarioAutenticado();
         mensagemService.curtir(idMensagem, usuario);
         return ResponseEntity.ok().build();
     }
@@ -86,6 +88,7 @@ public class MensagemController {
     
     @PutMapping(path = "/bloqueio/{id}")
     public ResponseEntity<Void> bloquear(@PathVariable String id) throws OPomboException {
+        verificarPermissaoAdmin();
         Mensagem mensagem = buscar(id);
         mensagemService.bloquearOuDesbloquearMensagem(mensagem);
         return ResponseEntity.ok().build();
@@ -104,6 +107,17 @@ public class MensagemController {
         }
 
         mensagemService.salvarImagem(imagem, idMensagem);
+    }
+
+    /**
+     * Método para verificar se o usuário autenticado é administrador.
+     * Lança uma exceção caso contrário.
+     */
+    private void verificarPermissaoAdmin() throws OPomboException {
+        Usuario usuario = authService.getUsuarioAutenticado();
+        if (usuario.getTipo() != TipoDeUsuario.ADMINISTRADOR) {
+            throw new OPomboException("Usuário não é administrador.", HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

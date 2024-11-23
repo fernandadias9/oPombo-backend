@@ -28,13 +28,16 @@ public class DenunciaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     public Denuncia denunciarMensagem(DenunciaDTO denunciaDTO) {
         Mensagem mensagem = this.mensagemRepository.findById(denunciaDTO.getIdMensagem()).get();
         Usuario usuario = this.usuarioRepository.findById(denunciaDTO.getIdUsuario()).get();
 
         DenunciaPK denunciaPK = new DenunciaPK();
         denunciaPK.setIdMensagem(denunciaDTO.getIdMensagem());
-        denunciaPK.setIdUsuario(denunciaDTO.getIdUsuario());
+        denunciaPK.setIdUsuario(denunciaDTO.getIdUsuario());  // O id do usuário autenticado
 
         Denuncia denuncia = new Denuncia();
         denuncia.setId(denunciaPK);
@@ -42,10 +45,12 @@ public class DenunciaService {
         denuncia.setUsuario(usuario);
         denuncia.setMotivo(denunciaDTO.getMotivo());
         denuncia.setFoiAnalisada(false);
+
         return denunciaRepository.save(denuncia);
     }
 
     public List<Denuncia> listar() {
+
         return denunciaRepository.findAll();
     }
 

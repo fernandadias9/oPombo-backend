@@ -15,7 +15,13 @@ import java.util.List;
 @Repository
 public interface DenunciaRepository extends JpaRepository<Denuncia, String>, JpaSpecificationExecutor<Denuncia> {
 
-    @Query("SELECT new com.opombo.model.dto.DenunciaDTO(d.mensagem.id, d.usuario.id, d.motivo) " +
+    @Query("SELECT new com.opombo.model.dto.DenunciaDTO(" +
+            "d.mensagem.id, " +
+            "d.usuario.id, " +
+            "d.motivo, " +
+            "d.data, " +  // dataDenuncia
+            "d.usuario.nome, " +  // nomeDenunciante
+            "d.mensagem.texto) " +  // conteudoMensagem
             "FROM Denuncia d")
     List<DenunciaDTO> findAllDenunciasDTO();
 

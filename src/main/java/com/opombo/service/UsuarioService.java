@@ -5,6 +5,7 @@ import com.opombo.exception.OPomboException;
 import com.opombo.model.dto.UsuarioDTO;
 import com.opombo.model.entity.Mensagem;
 import com.opombo.model.entity.Usuario;
+import com.opombo.model.enums.TipoDeUsuario;
 import com.opombo.model.filtro.UsuarioFiltro;
 import com.opombo.model.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
