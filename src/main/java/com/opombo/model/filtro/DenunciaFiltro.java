@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Root;
 import lombok.Data;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,8 @@ public class DenunciaFiltro extends BaseFiltro implements Specification<Denuncia
 
     private String texto;
     private String idDenunciante;
-    private LocalDateTime dataInicial;
-    private LocalDateTime dataFinal;
+    private LocalDate dataInicial;
+    private LocalDate dataFinal;
     private String motivoDaDenuncia;
     private boolean foiAnalisada;
 

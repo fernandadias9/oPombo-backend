@@ -28,6 +28,7 @@ public class Mensagem {
     private String texto;
 
     @ManyToOne
+    //@NotBlank
     @JoinColumn(name = "id_usuario")
     private Usuario publicador;
 
