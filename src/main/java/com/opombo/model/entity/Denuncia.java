@@ -32,5 +32,5 @@ public class Denuncia {
     @Enumerated(EnumType.STRING)
     private MotivoDaDenuncia motivo;
 
-    private boolean foiAnalisada = false;
+    private Boolean foiAnalisada = false;
 }

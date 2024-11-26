@@ -22,7 +22,7 @@ public class DenunciaFiltro extends BaseFiltro implements Specification<Denuncia
     private LocalDate dataInicial;
     private LocalDate dataFinal;
     private String motivoDaDenuncia;
-    private boolean foiAnalisada;
+    private Boolean foiAnalisada;
 
     public boolean temFiltro() {
         return  (filtroValido(this.texto))
@@ -51,7 +51,9 @@ public class DenunciaFiltro extends BaseFiltro implements Specification<Denuncia
             predicates.add(cb.like(root.get("motivo"), "%" + this.getMotivoDaDenuncia() + "%"));
         }
 
-        predicates.add(cb.equal(root.get("foiAnalisada"), this.isFoiAnalisada()));
+        if(this.getFoiAnalisada() != null) {
+            predicates.add(cb.equal(root.get("foiAnalisada"), this.getFoiAnalisada()));
+        }
 
         return cb.and(predicates.toArray(new Predicate[0]));
     }
