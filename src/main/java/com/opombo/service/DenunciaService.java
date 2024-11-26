@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DenunciaService {
@@ -75,8 +76,9 @@ public class DenunciaService {
         return denunciaRepository.findAll(filtros);
     }
 
-    public Denuncia buscar(String id) {
-        return denunciaRepository.findById(id).get();
+    public Denuncia buscarPorId(DenunciaPK id) {
+        Optional<Denuncia> denuncia = denunciaRepository.findById(id);
+        return denuncia.orElseThrow(() -> new RuntimeException("Denúncia não encontrada com o ID fornecido."));
     }
 
     public List<Denuncia> buscarDenunciasPorMensagem(String idMensagem) {

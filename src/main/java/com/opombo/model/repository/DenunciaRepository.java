@@ -3,6 +3,7 @@ package com.opombo.model.repository;
 import com.opombo.model.dto.DenunciaDTO;
 import com.opombo.model.dto.ListaDenunciasDTO;
 import com.opombo.model.entity.Denuncia;
+import com.opombo.model.entity.DenunciaPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public interface DenunciaRepository extends JpaRepository<Denuncia, String>, JpaSpecificationExecutor<Denuncia> {
+public interface DenunciaRepository extends JpaRepository<Denuncia, DenunciaPK>, JpaSpecificationExecutor<Denuncia> {
 
     @Query("SELECT new com.opombo.model.dto.DenunciaDTO(" +
             "d.mensagem.id, " +

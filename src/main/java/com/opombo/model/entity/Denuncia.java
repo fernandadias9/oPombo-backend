@@ -33,6 +33,4 @@ public class Denuncia {
     private MotivoDaDenuncia motivo;
 
     private boolean foiAnalisada = false;
-
-
 }

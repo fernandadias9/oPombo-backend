@@ -4,6 +4,7 @@ import com.opombo.auth.AuthenticationService;
 import com.opombo.exception.OPomboException;
 import com.opombo.model.dto.DenunciaDTO;
 import com.opombo.model.entity.Denuncia;
+import com.opombo.model.entity.DenunciaPK;
 import com.opombo.model.entity.Usuario;
 import com.opombo.model.enums.TipoDeUsuario;
 import com.opombo.model.filtro.DenunciaFiltro;
@@ -42,9 +43,16 @@ public class DenunciaController {
         return ResponseEntity.ok(denunciaAtualizada);
     }
 
-    @GetMapping(path = "/{id}")
-    public Denuncia buscar(@PathVariable String id) {
-        return denunciaService.buscar(id);
+    @GetMapping("/{idMensagem}/{idUsuario}")
+    public Denuncia buscarPorId(
+            @PathVariable String idMensagem,
+            @PathVariable String idUsuario
+    ) {
+        DenunciaPK id = new DenunciaPK();
+        id.setIdMensagem(idMensagem);
+        id.setIdUsuario(idUsuario);
+
+        return denunciaService.buscarPorId(id);
     }
 
     @GetMapping
