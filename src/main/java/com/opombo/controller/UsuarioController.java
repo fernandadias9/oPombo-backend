@@ -33,6 +33,15 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioAtualizado);
     }
 
+    @GetMapping("/autenticado")
+    public Usuario usuarioAutenticado() throws OPomboException {
+        Usuario usuario = authService.getUsuarioAutenticado();
+
+        String profilePictureUrl = null;
+
+        return usuario;
+    }
+
     @GetMapping(path = "/{id}")
     public  Usuario buscar(@PathVariable String id) {
         return usuarioService.buscar(id);

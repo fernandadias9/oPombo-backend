@@ -1,5 +1,6 @@
 package com.opombo.service;
 
+import com.opombo.exception.OPomboException;
 import com.opombo.model.dto.DenunciaDTO;
 import com.opombo.model.entity.Denuncia;
 import com.opombo.model.entity.DenunciaPK;
@@ -12,6 +13,7 @@ import com.opombo.model.repository.MensagemRepository;
 import com.opombo.model.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,6 +49,10 @@ public class DenunciaService {
         denuncia.setFoiAnalisada(false);
 
         return denunciaRepository.save(denuncia);
+    }
+
+    public Denuncia atualizar(Denuncia denuncia) throws OPomboException {
+        return this.denunciaRepository.save(denuncia);
     }
 
     public List<Denuncia> listar() {

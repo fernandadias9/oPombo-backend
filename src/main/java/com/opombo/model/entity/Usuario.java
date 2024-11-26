@@ -1,6 +1,7 @@
 package com.opombo.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.opombo.model.dto.UsuarioDTO;
 import com.opombo.model.enums.TipoDeUsuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -77,4 +78,16 @@ public class Usuario implements UserDetails {
     public String getUsername() {
         return this.email;
     }
+
+//    public static UsuarioDTO toDTO(Usuario u, String fotoPerfil) {
+//
+//        return new UsuarioDTO(
+//                u.getId(),
+//                u.getNome(),
+//                u.getEmail(),
+//                fotoPerfil,
+//                u.getTipo(),
+//                u.getCpf()
+//        );
+//    }
 }

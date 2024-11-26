@@ -76,6 +76,15 @@ public class MensagemController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{idMensagem}")
+    public ResponseEntity<Void> excluir(@PathVariable String idMensagem) throws OPomboException {
+        Usuario usuario = authService.getUsuarioAutenticado();
+
+        mensagemService.excluir(idMensagem, usuario.getId());
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping(path = "/curtidas/{id}")
     public ResponseEntity<Set<Usuario>> obterUsuariosQueCurtiram(@PathVariable String id) throws OPomboException {
         Set<Usuario> usuarios = mensagemService.obterUsuariosQueCurtiram(id);

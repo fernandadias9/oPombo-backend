@@ -66,6 +66,20 @@ public class MensagemService {
         return mensagemRepository.findById(id).get();
     }
 
+    public void excluir(String idMensagem, String idUsuario) throws OPomboException {
+        Mensagem mensagem = mensagemRepository.findById(idMensagem).orElseThrow(() -> new OPomboException("Mensagem não encontrada.", HttpStatus.BAD_REQUEST));
+
+        if(!mensagem.getPublicador().getId().equals(idUsuario)) {
+            throw new OPomboException("Você não pode excluir mensagens de outros usuários.", HttpStatus.BAD_REQUEST);
+        }
+
+        mensagemRepository.delete(mensagem);
+    }
+
+    public List<Mensagem> listar() {
+        return mensagemRepository.findAll();
+    }
+
     public List<Mensagem> listarComFiltro(MensagemFiltro filtros) {
         if (filtros.temPaginacao()) {
             int pageNumber = filtros.getPagina();
