@@ -43,7 +43,7 @@ public class UsuarioController {
     }
 
     @GetMapping(path = "/{id}")
-    public  Usuario buscar(@PathVariable String id) {
+    public Usuario buscar(@PathVariable String id) {
         return usuarioService.buscar(id);
     }
 
@@ -62,24 +62,4 @@ public class UsuarioController {
         Set<Mensagem> mensagensCurtidas = usuarioService.obterMensagensCurtidas(id);
         return ResponseEntity.ok(mensagensCurtidas);
     }
-
-    @PostMapping("/upload")
-    public void fazerUploadFotoPerfil(@RequestParam("imagem") MultipartFile imagem, String idUsuario) throws OPomboException {
-
-        if(imagem == null) {
-            throw new OPomboException("Arquivo inválido.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        Usuario usuarioAutenticado = authService.getUsuarioAutenticado();
-        if (usuarioAutenticado == null ) {
-            throw new OPomboException("Usuário não encontrado.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        usuarioService.salvarFotoPerfil(imagem, idUsuario);
-    }
-
-//    @GetMapping("/sair")
-//    public void logout() {
-//
-//    }
 }

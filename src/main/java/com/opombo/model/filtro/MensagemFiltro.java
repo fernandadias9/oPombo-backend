@@ -19,11 +19,13 @@ public class MensagemFiltro extends BaseFiltro implements Specification<Mensagem
     private String idUsuario;
     private LocalDate dataInicial;
     private LocalDate dataFinal;
+    private Boolean curtido;
 
     public boolean temFiltro() {
         return (filtroValido(this.texto))
                 || (filtroValido(this.nomePublicador))
                 || (filtroValido(this.idUsuario))
+                || curtido
                 || (dataInicial != null)
                 || (dataFinal != null);
     }

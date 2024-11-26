@@ -62,9 +62,11 @@ public class UsuarioService implements UserDetailsService {
         if (usuarioDTO.getEmail() != null) {
             usuarioExistente.setEmail(usuarioDTO.getEmail());
         }
-
         if (usuarioDTO.getSenha() != null) {
             usuarioExistente.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        }
+        if (!usuarioDTO.getFotoPerfil().isEmpty()) {
+            usuarioExistente.setFotoPerfil(usuarioDTO.getFotoPerfil());
         }
 
         return usuarioRepository.save(usuarioExistente);
@@ -100,12 +102,10 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRepository.findAll(filtros);
     }
 
-    public void salvarFotoPerfil(MultipartFile imagem, String idUsuario) throws OPomboException {
+    public void salvarFotoPerfil(String imagemBase64, String idUsuario) throws OPomboException {
 
         Usuario usuarioFotoPerfil = usuarioRepository.findById(idUsuario).orElseThrow(() ->
                 new OPomboException("Usuário não encontrado", HttpStatus.INTERNAL_SERVER_ERROR));
-
-        String imagemBase64 = imagemService.processarImagem(imagem);
 
         usuarioFotoPerfil.setFotoPerfil(imagemBase64);
 
