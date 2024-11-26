@@ -18,7 +18,7 @@ import java.util.List;
 public class DenunciaFiltro extends BaseFiltro implements Specification<Denuncia> {
 
     private String texto;
-        private String idDenunciante;
+    private String idDenunciante;
     private LocalDate dataInicial;
     private LocalDate dataFinal;
     private String motivoDaDenuncia;

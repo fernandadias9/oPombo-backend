@@ -35,11 +35,17 @@ public class DenunciaController {
         return ResponseEntity.ok(denuncia);
     }
 
-    @PutMapping("/atualizar")
-    public ResponseEntity<Denuncia> atualizar(
-            @RequestBody @Valid Denuncia denuncia) throws OPomboException {
-        verificarPermissaoAdmin();
-        Denuncia denunciaAtualizada = denunciaService.atualizar(denuncia);
+    @PutMapping("/{idMensagem}/{idUsuario}")
+    public ResponseEntity<Denuncia> atualizarDenuncia(
+            @PathVariable String idMensagem,
+            @PathVariable String idUsuario,
+            @RequestParam boolean foiAnalisada
+    ) throws OPomboException {
+        DenunciaPK id = new DenunciaPK();
+        id.setIdMensagem(idMensagem);
+        id.setIdUsuario(idUsuario);
+
+        Denuncia denunciaAtualizada = denunciaService.atualizarDenuncia(id, foiAnalisada);
         return ResponseEntity.ok(denunciaAtualizada);
     }
 

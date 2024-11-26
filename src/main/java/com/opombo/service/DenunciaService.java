@@ -52,8 +52,20 @@ public class DenunciaService {
         return denunciaRepository.save(denuncia);
     }
 
-    public Denuncia atualizar(Denuncia denuncia) throws OPomboException {
-        return this.denunciaRepository.save(denuncia);
+    public Denuncia atualizarDenuncia(DenunciaPK id, boolean foiAnalisada) throws OPomboException {
+        // Busca a denúncia pelo ID
+        Optional<Denuncia> optionalDenuncia = denunciaRepository.findById(id);
+
+        if (optionalDenuncia.isEmpty()) {
+            throw new OPomboException("Denúncia não encontrada", HttpStatus.NOT_FOUND);
+        }
+
+        // Atualiza o campo foiAnalisada
+        Denuncia denuncia = optionalDenuncia.get();
+        denuncia.setFoiAnalisada(foiAnalisada);
+
+        // Salva as alterações
+        return denunciaRepository.save(denuncia);
     }
 
     public List<Denuncia> listar() {
