@@ -83,8 +83,9 @@ public class UsuarioService implements UserDetailsService {
         usuarioRepository.deleteById(id);
     }
 
-    public Set<Mensagem> obterMensagensCurtidas(String idUsuario) {
-        Usuario usuario = buscar(idUsuario);
+    public Set<Mensagem> obterMensagensCurtidas(String idUsuario) throws OPomboException {
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() ->
+                new OPomboException("Usuário não encontrado", HttpStatus.NOT_FOUND));
         return usuario.getMensagensCurtidas();
     }
 

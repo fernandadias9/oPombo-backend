@@ -58,7 +58,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/mensagensCurtidas/{id}")
-    public ResponseEntity<Set<Mensagem>> obterMensagensCurtidas(@PathVariable String id) {
+    public ResponseEntity<Set<Mensagem>> obterMensagensCurtidas(@PathVariable String id) throws OPomboException {
         Set<Mensagem> mensagensCurtidas = usuarioService.obterMensagensCurtidas(id);
         return ResponseEntity.ok(mensagensCurtidas);
     }

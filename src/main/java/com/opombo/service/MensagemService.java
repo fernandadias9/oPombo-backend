@@ -10,6 +10,7 @@ import com.opombo.model.repository.MensagemRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -84,10 +85,14 @@ public class MensagemService {
         if (filtros.temPaginacao()) {
             int pageNumber = filtros.getPagina();
             int pageSize = filtros.getLimite();
-            PageRequest pagina = PageRequest.of(pageNumber - 1, pageSize);
+            PageRequest pagina = PageRequest.of(
+                    pageNumber - 1,
+                    pageSize,
+                    Sort.by(Sort.Direction.DESC, "criadoEm")
+            );
             return mensagemRepository.findAll(filtros, pagina).toList();
         }
-        return mensagemRepository.findAll(filtros);
+        return mensagemRepository.findAll(filtros, Sort.by(Sort.Direction.DESC, "criadoEm"));
     }
 
     @Transactional

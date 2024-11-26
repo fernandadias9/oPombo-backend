@@ -78,7 +78,7 @@ public class DenunciaService {
     }
 
     public List<Denuncia> listarComFiltro(DenunciaFiltro filtros) {
-        if(filtros.temPaginacao()) {
+        if (filtros.temPaginacao()) {
             int pageNumber = filtros.getPagina();
             int pageSize = filtros.getLimite();
 
@@ -95,5 +95,25 @@ public class DenunciaService {
 
     public List<Denuncia> buscarDenunciasPorMensagem(String idMensagem) {
         return denunciaRepository.findByMensagemId(idMensagem);
+    }
+
+    public void excluir(String idUsuario, String idMensagem) throws OPomboException {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new OPomboException("Usuário não encontrado", HttpStatus.NOT_FOUND));
+        Mensagem mensagem = mensagemRepository.findById(idMensagem)
+                .orElseThrow(() -> new OPomboException("Mensagem não encontrada", HttpStatus.NOT_FOUND));
+
+        DenunciaPK denunciaPK = new DenunciaPK();
+        denunciaPK.setIdUsuario(usuario.getId());
+        denunciaPK.setIdMensagem(mensagem.getId());
+
+        Denuncia denuncia = denunciaRepository.findById(denunciaPK)
+                .orElseThrow(() -> new OPomboException("Denúncia não encontrada", HttpStatus.NOT_FOUND));
+
+        if (!denuncia.getUsuario().getId().equals(idUsuario)) {
+            throw new OPomboException("Apenas o usuário que criou a denúncia pode excluí-la", HttpStatus.FORBIDDEN);
+        }
+
+        denunciaRepository.delete(denuncia);
     }
 }

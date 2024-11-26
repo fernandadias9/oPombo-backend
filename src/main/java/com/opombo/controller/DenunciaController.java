@@ -53,11 +53,12 @@ public class DenunciaController {
     public Denuncia buscarPorId(
             @PathVariable String idMensagem,
             @PathVariable String idUsuario
-    ) {
+    ) throws OPomboException {
         DenunciaPK id = new DenunciaPK();
         id.setIdMensagem(idMensagem);
         id.setIdUsuario(idUsuario);
 
+        verificarPermissaoAdmin();
         return denunciaService.buscarPorId(id);
     }
 
@@ -65,6 +66,15 @@ public class DenunciaController {
     public List<DenunciaDTO> listarDTO() throws OPomboException {
         verificarPermissaoAdmin();
         return denunciaService.listarDTO();
+    }
+
+    @DeleteMapping("/{publicationId}")
+    public ResponseEntity<Void> excluirDenuncia(@PathVariable("publicationId") String idMensagem) throws OPomboException {
+        Usuario usuario = authService.getUsuarioAutenticado();
+
+        denunciaService.excluir(usuario.getId(), idMensagem);
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/todas")
