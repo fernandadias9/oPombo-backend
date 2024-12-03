@@ -16,4 +16,8 @@ public class DenunciaDTO {
     private LocalDateTime dataDenuncia;
     private String nomeDenunciante;
     private String conteudoMensagem;
+
+    public DenunciaDTO() {
+
+    }
 }

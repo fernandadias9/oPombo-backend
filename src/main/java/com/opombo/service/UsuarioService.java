@@ -28,9 +28,6 @@ public class UsuarioService implements UserDetailsService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private ImagemService imagemService;
-
-    @Autowired
     private RSAPasswordEncoder passwordEncoder;
 
     @Override

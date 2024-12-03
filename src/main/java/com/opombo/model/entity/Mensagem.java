@@ -24,7 +24,7 @@ public class Mensagem {
 
     @NotBlank(message = "Mensagem é obrigatória")
     @Column(length = 4000)
-    //@Size(min = 1, max = 300)
+    @Size(min = 1, max = 300)
     private String texto;
 
     @ManyToOne

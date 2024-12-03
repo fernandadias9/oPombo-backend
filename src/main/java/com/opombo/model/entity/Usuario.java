@@ -38,9 +38,6 @@ public class Usuario implements UserDetails {
     @Column(length = 4000)
     private String senha;
 
-//    @Column(length = 255, nullable = false)
-//    private String salt;
-
     @NotBlank(message = "CPF é obrigatório")
     @CPF
     private String cpf;
@@ -78,16 +75,4 @@ public class Usuario implements UserDetails {
     public String getUsername() {
         return this.email;
     }
-
-//    public static UsuarioDTO toDTO(Usuario u, String fotoPerfil) {
-//
-//        return new UsuarioDTO(
-//                u.getId(),
-//                u.getNome(),
-//                u.getEmail(),
-//                fotoPerfil,
-//                u.getTipo(),
-//                u.getCpf()
-//        );
-//    }
 }

@@ -69,5 +69,4 @@ public class MensagemServiceTest {
 
         verify(mensagemRepository, times(0)).save(mensagem);
     }
-
 }
